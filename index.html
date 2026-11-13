@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SIMOPS Radar · UK offshore clash early warning</title>
+  <meta name="description" content="Early warning of simultaneous offshore operations on the UK continental shelf, built from public regulator consent data. Pick an operator, set the sensitivity, play back 2019 to 2026.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.1/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.1/dist/maplibre-gl.js"></script>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>SIMOPS Radar</h1>
+      <p>Early warning of clashing offshore operations, from public consent data. UK continental shelf, 2019 to 2026.</p>
+    </div>
+    <button id="about-btn" class="icon" title="About this demo" aria-label="About">ⓘ</button>
+  </header>
+
+  <section class="toolbar">
+    <label class="field">
+      <span>Operator</span>
+      <select id="op"></select>
+    </label>
+    <div class="field">
+      <span>Sensitivity</span>
+      <div class="seg" id="preset" role="radiogroup">
+        <button data-p="quiet" role="radio">Quiet</button>
+        <button data-p="medium" role="radio">Medium</button>
+        <button data-p="loud" role="radio">Loud</button>
+        <button data-p="custom" role="radio" disabled>Custom</button>
+      </div>
+    </div>
+    <details id="rules" class="rules">
+      <summary>Rules</summary>
+      <div class="rules-body">
+        <fieldset>
+          <legend>Activity pairs to flag</legend>
+          <div id="types"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Distance</legend>
+          <label><input type="radio" name="near" value="same"> Same block only</label>
+          <label><input type="radio" name="near" value="adj"> Same or neighbouring block</label>
+        </fieldset>
+        <fieldset>
+          <legend>Dates</legend>
+          <label><input type="checkbox" id="r-assumed"> Include survey notices with no end date (assume 30 days)</label>
+          <label>Overlap at least <select id="r-minov"><option value="1">1 day</option><option value="7">7 days</option><option value="14">14 days</option><option value="30">30 days</option></select></label>
+          <label>Ignore consent windows longer than <select id="r-maxwin"><option value="120">4 months</option><option value="200">6½ months</option><option value="365">1 year</option><option value="99999">no limit</option></select></label>
+        </fieldset>
+        <fieldset>
+          <legend>Whose activities</legend>
+          <label><input type="checkbox" id="r-internal"> Include clashes between my own activities</label>
+        </fieldset>
+      </div>
+    </details>
+    <button id="example" class="example" title="Shell 3D seismic in 21/29 while Well Enhancer works at Gannet F">▶ Example: Gannet, August 2019</button>
+  </section>
+
+  <main>
+    <section class="map-wrap">
+      <div id="map"></div>
+      <details class="legend" open>
+        <summary>Activity</summary>
+        <div class="items" id="legend-items"></div>
+      </details>
+      <div class="timebar">
+        <button id="play" class="icon-btn" aria-label="Play">▶</button>
+        <input id="date" type="range" min="0" max="100" step="1" aria-label="Date">
+        <output id="date-label"></output>
+      </div>
+    </section>
+
+    <section class="side">
+      <div class="summary" id="summary"></div>
+      <div class="years" id="years"></div>
+      <div class="timeline-wrap"><svg id="timeline" role="img" aria-label="Alerts on a timeline"></svg></div>
+      <div class="list" id="list"></div>
+      <footer>
+        Data: OPRED <a href="https://itportal.energysecurity.gov.uk/eng/fox/beis/PETS_EXTERNAL_PUBLICATION/main" target="_blank" rel="noopener">PETS public application data</a> (downloaded <span id="built"></span>),
+        <a href="https://opendata-nstauthority.hub.arcgis.com/" target="_blank" rel="noopener">NSTA</a> blocks.
+        Dates are consent windows, not confirmed operations. Advisory only.
+        Built by Rob Dunfey · <a href="https://github.com/pushpingeo/simops-radar" target="_blank" rel="noopener">source</a>.
+      </footer>
+    </section>
+  </main>
+
+  <dialog id="about">
+    <form method="dialog">
+      <h2>What this is</h2>
+      <p>Offshore, a seismic vessel costs around $250,000 a day and a rig waiting to get on location around $500,000. If two operations meet in the same patch of sea, one of them waits.</p>
+      <p>Every survey, rig move, well intervention and pipeline job on the UK shelf needs a consent from the regulator (OPRED), and the list is public. SIMOPS Radar reads that list, finds activities in the same or a neighbouring block whose consent windows overlap, and ranks them by how likely they are to matter.</p>
+      <p>Pick an operator to see only the clashes that involve its own work. Turn the sensitivity down to see the few that are worth a phone call.</p>
+      <p class="small">Limits: locations are licence blocks, not exact positions. Dates are consent windows, which are usually wider than the actual work. Survey notices have no end date, so 30 days is assumed.</p>
+      <div class="row"><button value="ok">Close</button></div>
+    </form>
+  </dialog>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

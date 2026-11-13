@@ -1,0 +1,329 @@
+{
+ "built": "2026-11-13",
+ "notifyDays": 30,
+ "years": [
+  2019,
+  2020,
+  2021,
+  2022,
+  2023,
+  2024,
+  2025,
+  2026
+ ],
+ "operators": [
+  [
+   "Shell",
+   412
+  ],
+  [
+   "Harbour Energy",
+   295
+  ],
+  [
+   "NEO NEXT",
+   277
+  ],
+  [
+   "Perenco",
+   234
+  ],
+  [
+   "BP",
+   187
+  ],
+  [
+   "Eni",
+   163
+  ],
+  [
+   "Equinor",
+   124
+  ],
+  [
+   "Ithaca Energy",
+   123
+  ],
+  [
+   "Spirit Energy / Centrica",
+   86
+  ],
+  [
+   "CNOOC",
+   79
+  ],
+  [
+   "CB&I Asset Solutions",
+   68
+  ],
+  [
+   "Serica Energy",
+   65
+  ],
+  [
+   "TAQA",
+   55
+  ],
+  [
+   "Dana Petroleum",
+   46
+  ],
+  [
+   "Apache",
+   45
+  ],
+  [
+   "Adura",
+   41
+  ],
+  [
+   "INEOS",
+   38
+  ],
+  [
+   "CNR International",
+   37
+  ],
+  [
+   "EnQuest",
+   32
+  ],
+  [
+   "ONE-Dyas",
+   23
+  ],
+  [
+   "Northern Endurance (NZNS)",
+   20
+  ],
+  [
+   "CGG",
+   15
+  ],
+  [
+   "DNO North Sea (ROGB)",
+   14
+  ],
+  [
+   "Petrodec UK",
+   14
+  ],
+  [
+   "Petrogas",
+   14
+  ],
+  [
+   "Three60 Energy Wells UK",
+   12
+  ],
+  [
+   "Anasuria",
+   12
+  ],
+  [
+   "Fairfield",
+   9
+  ],
+  [
+   "Exceed Torridon",
+   8
+  ],
+  [
+   "Capricorn Energy UK",
+   7
+  ],
+  [
+   "Gardline",
+   7
+  ],
+  [
+   "Wood Group UK",
+   7
+  ],
+  [
+   "ODE Asset Management",
+   6
+  ],
+  [
+   "Hartshead Resources",
+   6
+  ],
+  [
+   "Prax Upstream",
+   5
+  ],
+  [
+   "PX",
+   5
+  ],
+  [
+   "Energean UK",
+   5
+  ],
+  [
+   "PGS",
+   4
+  ],
+  [
+   "GNI (UK)",
+   4
+  ],
+  [
+   "GX Technology Eame",
+   4
+  ],
+  [
+   "Calenergy SNS",
+   4
+  ],
+  [
+   "Aker BP",
+   4
+  ],
+  [
+   "Interconnector",
+   4
+  ],
+  [
+   "Fugro GB (North) Marine",
+   4
+  ],
+  [
+   "Fujairah Oil And Gas UK",
+   4
+  ],
+  [
+   "Multiclient Geophysical, Filial Av Geoex",
+   3
+  ],
+  [
+   "Blue Ocean Seismic Services",
+   3
+  ],
+  [
+   "Bridge Petroleum 3",
+   3
+  ],
+  [
+   "Ls Petroleum 3",
+   2
+  ],
+  [
+   "Jersey Petroleum",
+   2
+  ],
+  [
+   "Cornerstone North Sea",
+   2
+  ],
+  [
+   "IOG",
+   2
+  ],
+  [
+   "Tullow Oil Sk",
+   2
+  ],
+  [
+   "Wintershall Noordzee",
+   2
+  ],
+  [
+   "North Sea Natural Resources",
+   2
+  ],
+  [
+   "Ping Petroleum UK",
+   2
+  ],
+  [
+   "ConocoPhillips Skandinavia",
+   2
+  ],
+  [
+   "Electromagnetic Geoservices",
+   1
+  ],
+  [
+   "Egdon Resources UK",
+   1
+  ],
+  [
+   "Hess",
+   1
+  ],
+  [
+   "BHP Billiton Petroleum Great Britain",
+   1
+  ],
+  [
+   "Azinor Catalyst",
+   1
+  ],
+  [
+   "Tampnet",
+   1
+  ],
+  [
+   "Corallian Energy",
+   1
+  ],
+  [
+   "Investco Portfolio",
+   1
+  ],
+  [
+   "Interconnector Leasing Company",
+   1
+  ],
+  [
+   "Dunlin Management",
+   1
+  ],
+  [
+   "Crogga (UK)",
+   1
+  ],
+  [
+   "Rapid Oil Production",
+   1
+  ],
+  [
+   "TGS",
+   1
+  ],
+  [
+   "Three60 Integrity Management",
+   1
+  ],
+  [
+   "Fjord Defence Group",
+   1
+  ],
+  [
+   "Well-Safe Solutions",
+   1
+  ],
+  [
+   "Gassco AS UK Branch",
+   1
+  ],
+  [
+   "BBL Company V.O.F.",
+   1
+  ],
+  [
+   "Teekay Petrojarl Floating Production UK",
+   1
+  ],
+  [
+   "ABP Norway",
+   1
+  ]
+ ],
+ "counts": {
+  "activities": 2593,
+  "pairs": 8525,
+  "blocks": 912
+ }
+}
