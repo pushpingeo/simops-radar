@@ -26,7 +26,8 @@ Cloudflare dashboard → Storage & databases → D1 → simops-radar → Console
    optional; hits.who is a salted hash of the IP, kept one day for rate limiting.
 2. Create a Worker `simops-radar-api` with `worker.js`, bind the database as `DB`,
    and add a text variable `SALT` set to any random string.
-3. Add the custom domain `api.simopsradar.com` to the Worker.
+3. The site calls the Worker at https://simops-radar-api.robdunfey.workers.dev (set in js/app.js).
+   The Worker lives in a different Cloudflare account from the simopsradar.com zone, so no custom domain.
 
 Local testing: `npx wrangler d1 execute simops-radar --local --file schema.sql`
 then `npx wrangler dev --local`.

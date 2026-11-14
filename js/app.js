@@ -440,7 +440,7 @@ function scoreDetails(p) {
 }
 
 // ---------------------------------------------------------------- server: voluntary sign-ups and feedback
-const API = location.hostname === "localhost" ? "http://localhost:8787" : "https://api.simopsradar.com";
+const API = location.hostname === "localhost" ? "http://localhost:8787" : "https://simops-radar-api.robdunfey.workers.dev";
 let INVITED = false;
 try {
   if (new URLSearchParams(location.search).has("invite")) localStorage.setItem("simops-radar-invite", "1");
