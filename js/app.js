@@ -362,7 +362,8 @@ function renderYears() {
 function listItems() {
   if (state.mode === "ahead") {
     const it = current.filter(isAhead).filter(p => !state.newOnly || p.isNew);
-    return it.sort((a, b) => a.os - b.os || b.score - a.score);
+    // happening now first (most serious first), then the rest by start date
+    return it.sort((a, b) => (a.os > TODAY) - (b.os > TODAY) || (a.os <= TODAY ? b.score - a.score : a.os - b.os));
   }
   return current.filter(p => isPast(p) && inYear(p, state.year));
 }
