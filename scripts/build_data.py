@@ -21,7 +21,9 @@ import geopandas as gpd
 
 PETS_DIR, GEODIR, OUT = sys.argv[1:4]
 TODAY = sys.argv[sys.argv.index("--today") + 1] if "--today" in sys.argv else datetime.date.today().isoformat()
-NOTIFY_DAYS = 30
+NOTIFY_DAYS = 30   # default assumed length of a survey notice
+MAX_NOTICE = 90    # longest notice length the page lets you choose
+MAX_GAP = 30       # largest near-miss buffer the page lets you choose
 FIRST_DAY = pd.Timestamp("2019-01-01")
 
 # ---------------- operator groups ----------------
@@ -189,12 +191,15 @@ for a in R:
             continue  # the same rig or vessel: sequencing, not a clash
         if set(a["owners"]) & set(c["owners"]) and a["cls"] in SURV and c["cls"] in SURV:
             continue  # one operator's surveys: usually one campaign
-        o_s, o_e = max(a["start"], c["start"]), min(a["end"], c["end"])
-        ov = (o_e - o_s).days + 1
-        if ov <= 0:
+        # Keep pairs that could matter under the page's sliders: survey notices assumed to run
+        # up to MAX_NOTICE days, and windows up to MAX_GAP days apart. The page works out the
+        # actual overlap or gap from the activity dates and the user's settings.
+        a_end = a["start"] + pd.Timedelta(days=MAX_NOTICE) if a["assumed"] else a["end"]
+        c_end = c["start"] + pd.Timedelta(days=MAX_NOTICE) if c["assumed"] else c["end"]
+        o_s, o_e = max(a["start"], c["start"]), min(a_end, c_end)
+        if (o_e - o_s).days + 1 <= -MAX_GAP:
             continue
-        pairs.append([a["id"], c["id"], 1 if a["block"] == c["block"] else 0,
-                      o_s.strftime("%Y-%m-%d"), o_e.strftime("%Y-%m-%d"), ov])
+        pairs.append([a["id"], c["id"], 1 if a["block"] == c["block"] else 0])
 
 pairs.sort()  # deterministic output, so a day with no PETS changes produces no commit
 
@@ -262,7 +267,7 @@ for r in acts_out:
     for o in r["owners"]:
         ops[o] = ops.get(o, 0) + 1
 meta = dict(updated=TODAY if (something or not old_meta.get("updated")) else old_meta["updated"],
-            trackingSince=old_meta.get("trackingSince") or TODAY, notifyDays=NOTIFY_DAYS,
+            trackingSince=old_meta.get("trackingSince") or TODAY, notifyDays=NOTIFY_DAYS, maxNotice=MAX_NOTICE, maxGap=MAX_GAP,
             years=sorted({int(re.search(r"(\d{4})", os.path.basename(f)).group(1)) for f in glob.glob(f"{PETS_DIR}/pets_*.csv")}),
             operators=sorted([[k, v] for k, v in ops.items()], key=lambda x: (-x[1], x[0])),
             counts=dict(activities=len(acts_out), pairs=len(pairs), blocks=len(bl)))

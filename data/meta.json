@@ -2,6 +2,8 @@
  "updated": "2026-11-14",
  "trackingSince": "2026-11-14",
  "notifyDays": 30,
+ "maxNotice": 90,
+ "maxGap": 30,
  "years": [
   2019,
   2020,
@@ -324,7 +326,7 @@
  ],
  "counts": {
   "activities": 2593,
-  "pairs": 8525,
+  "pairs": 10797,
   "blocks": 912
  }
 }

@@ -25,6 +25,24 @@ const W = {
   "notice|site": 0.2, "site|subsea": 0.2, "notice|subsea": 0.2,
 };
 
+function typeKey(a, b) {
+  const [x, y] = [a, b].sort();
+  if (x === "seismic" || y === "seismic") {
+    const other = x === "seismic" ? y : x;
+    return { seismic: "ss", vessel: "sv", rig: "sr", subsea: "sp", site: "sy", notice: "sy" }[other] || "sx";
+  }
+  if (["site", "notice", "vsp"].includes(x) || ["site", "notice", "vsp"].includes(y)) return "sx";
+  if (x === "rig" && y === "rig") return "rr";
+  return "rv";
+}
+
+// Activity types along both sides of the pairing grid
+const C = ["seismic", "site", "notice", "vsp", "rig", "vessel", "subsea"];
+const C_SHORT = { seismic: "Seismic", site: "Site svy", notice: "Notice", vsp: "VSP", rig: "Rig", vessel: "Vessel", subsea: "Pipeline" };
+const CELLS = [];
+C.forEach((x, i) => C.slice(i).forEach(y => CELLS.push([x, y].sort().join("|"))));
+const defaultLevel = ck => Math.max(1, Math.round((W[ck] ?? 0.1) * 5));  // importance 1-5
+
 const TYPES = [
   { key: "sv", label: "Seismic vs intervention or dive vessel" },
   { key: "sr", label: "Seismic vs rig" },
@@ -38,11 +56,15 @@ const TYPES = [
 const TYPE_LABEL = Object.fromEntries(TYPES.map(t => [t.key, t.label]));
 const KIND = { sv: "Seismic vs vessel", sr: "Seismic vs rig", ss: "Seismic vs seismic", sp: "Seismic vs pipeline works", sy: "Seismic vs site survey", rr: "Rig vs rig", rv: "Rig, vessel or pipeline works", sx: "Survey overlap" };
 
+// A preset switches pairing-grid cells on (at their default importance) by family, and sets the sliders.
+const grid = families => Object.fromEntries(CELLS.map(ck => [ck, families.includes(typeKey(...ck.split("|"))) ? defaultLevel(ck) : 0]));
+const BASE = { near: "adj", notice: 30, buffer: 0, minScore: 0, internal: true, mySide: "any" };
 const PRESETS = {
-  quiet:  { types: ["sv", "sr", "ss", "sp", "sy"], near: "adj", assumed: false, minOv: 7, maxWin: 200, internal: true },
-  medium: { types: ["sv", "sr", "ss", "sp", "sy", "rr", "rv"], near: "adj", assumed: true, minOv: 7, maxWin: 365, internal: true },
-  loud:   { types: TYPES.map(t => t.key), near: "adj", assumed: true, minOv: 1, maxWin: 99999, internal: true },
+  quiet:  { ...BASE, m: grid(["sv", "sr", "ss", "sp", "sy"]), assumed: false, minOv: 7, maxWin: 200 },
+  medium: { ...BASE, m: grid(["sv", "sr", "ss", "sp", "sy", "rr", "rv"]), assumed: true, minOv: 7, maxWin: 365 },
+  loud:   { ...BASE, m: grid(TYPES.map(t => t.key)), assumed: true, minOv: 1, maxWin: 99999 },
 };
+const MAXWIN_NONE = 99999;
 
 const $ = s => document.querySelector(s);
 const fmt = ms => new Date(ms).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
@@ -52,16 +74,6 @@ const iso = ms => new Date(ms).toISOString().slice(0, 10);
 const parse = s => Date.parse(s + "T00:00:00Z");
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-function typeKey(a, b) {
-  const [x, y] = [a, b].sort();
-  if (x === "seismic" || y === "seismic") {
-    const other = x === "seismic" ? y : x;
-    return { seismic: "ss", vessel: "sv", rig: "sr", subsea: "sp", site: "sy", notice: "sy" }[other] || "sx";
-  }
-  if (["site", "notice", "vsp"].includes(x) || ["site", "notice", "vsp"].includes(y)) return "sx";
-  if (x === "rig" && y === "rig") return "rr";
-  return "rv";
-}
 
 const state = {
   op: "all", preset: "quiet", rules: structuredClone(PRESETS.quiet),
@@ -86,32 +98,58 @@ async function load() {
   state.date = Math.min(Math.max(meta.updatedMs, START), END);
   state.year = new Date(state.date).getUTCFullYear();
   const recent = d => d && parse(d) >= meta.newSince && parse(d) > parse(meta.trackingSince);
-  A = acts.map(a => ({ ...a, s: parse(a.start), e: parse(a.end), days: (parse(a.end) - parse(a.start)) / DAY + 1,
+  A = acts.map(a => ({ ...a, s: parse(a.start), e: parse(a.end), e0: parse(a.end), days: (parse(a.end) - parse(a.start)) / DAY + 1,
     isNew: recent(a.first) || recent(a.changed), newDate: recent(a.first) ? a.first : recent(a.changed) ? a.changed : null,
     newKind: recent(a.first) ? "new" : "changed" }));
-  P = pairs.map(([ia, ib, same, os, oe, ov], i) => {
+  P = pairs.map(([ia, ib, same], i) => {
     const a = A[ia], b = A[ib];
-    const ck = [a.cls, b.cls].sort().join("|");
-    const w = W[ck] ?? 0.1;
-    const nAssumed = (a.assumed ? 1 : 0) + (b.assumed ? 1 : 0);
-    const longest = Math.max(a.days, b.days);
-    const score = w * (same ? 1 : 0.6) * Math.pow(0.6, nAssumed) * Math.min(ov, 30) / 30 / (1 + longest / 120);
-    const shared = a.owners.some(o => b.owners.includes(o));
-    return { i, a, b, same: !!same, os: parse(os), oe: parse(oe), ov, type: typeKey(a.cls, b.cls), w, nAssumed, longest, score, shared, isNew: a.isNew || b.isNew };
+    return { i, a, b, same: !!same, ck: [a.cls, b.cls].sort().join("|"), type: typeKey(a.cls, b.cls),
+      nAssumed: (a.assumed ? 1 : 0) + (b.assumed ? 1 : 0), shared: a.owners.some(o => b.owners.includes(o)),
+      key: [a.key, b.key].sort().join(" | "), isNew: a.isNew || b.isNew };
   });
 }
 
-// ---------------------------------------------------------------- filtering
+// ---------------------------------------------------------------- scoring and filtering
+// Survey notices have no end date; their length comes from the "notice" slider.
+let noticeApplied = null;
+function applyNotice(days) {
+  if (noticeApplied === days) return;
+  for (const a of A) if (a.assumed) { a.e = a.s + days * DAY; a.days = days + 1; }
+  noticeApplied = days;
+}
+
+// Work out overlap (or the gap, for near misses) and the score for one pair under the current rules.
+function scorePair(p, r) {
+  const { a, b } = p;
+  const os = Math.max(a.s, b.s), oe = Math.min(a.e, b.e);
+  p.ov = Math.round((oe - os) / DAY) + 1;
+  p.gap = p.ov > 0 ? 0 : 1 - p.ov;
+  // for a near miss, the "window" shown is the gap between the two
+  p.os = p.ov > 0 ? os : oe; p.oe = p.ov > 0 ? oe : os;
+  p.longest = Math.max(a.days, b.days);
+  p.level = r.m[p.ck] || 0;
+  p.f = {
+    w: p.level / 5,
+    near: p.same ? 1 : 0.6,
+    dates: Math.pow(0.6, p.nAssumed),
+    overlap: p.ov > 0 ? Math.min(p.ov, 30) / 30 : r.buffer ? 0.3 * (r.buffer - p.gap + 1) / r.buffer : 0,
+    window: 1 / (1 + p.longest / 120),
+  };
+  p.score = p.f.w * p.f.near * p.f.dates * p.f.overlap * p.f.window;
+}
+
 function passes(p, r = state.rules, op = state.op) {
-  if (!r.types.includes(p.type)) return false;
+  if (!p.level) return false;
   if (r.near === "same" && !p.same) return false;
   if (!r.assumed && p.nAssumed) return false;
-  if (p.ov < r.minOv) return false;
+  if (p.ov > 0 ? p.ov < r.minOv : p.gap > r.buffer) return false;
   if (p.longest > r.maxWin) return false;
+  if (p.score < r.minScore) return false;
   if (op === "all") return r.internal || !p.shared;
   const ma = p.a.owners.includes(op), mb = p.b.owners.includes(op);
   if (!ma && !mb) return false;
   if (ma && mb && !r.internal) return false;
+  if (r.mySide !== "any" && !((ma && p.a.cls === r.mySide) || (mb && p.b.cls === r.mySide))) return false;
   return true;
 }
 
@@ -125,7 +163,9 @@ const yStart = y => Date.UTC(y, 0, 1), yEnd = y => Date.UTC(y, 11, 31);
 const inYear = (p, y) => p.os <= yEnd(y) && p.oe >= yStart(y);
 
 function recompute() {
-  current = P.filter(p => passes(p)).sort((x, y) => y.score - x.score);
+  applyNotice(state.rules.notice);
+  for (const p of P) scorePair(p, state.rules);
+  current = P.filter(p => passes(p)).sort((x, y) => y.score - x.score || x.os - y.os);
   if (state.sel != null && !current.some(p => p.i === state.sel)) state.sel = null;
 }
 
@@ -138,13 +178,42 @@ function buildControls() {
     meta.operators.filter(([, n]) => n < 3).sort().map(([name]) => `<option value="${esc(name)}">${esc(name)}</option>`).join("") + `</optgroup>`;
   op.onchange = () => { state.op = op.value; state.sel = null; state.showN = 40; update(); };
 
-  $("#types").innerHTML = TYPES.map(t => `<label><input type="checkbox" value="${t.key}"> ${t.label}</label>`).join("");
-  $("#types").onchange = e => { const v = e.target.value; const s = new Set(state.rules.types); e.target.checked ? s.add(v) : s.delete(v); state.rules.types = [...s]; custom(); };
+  // pairing grid: activity types on both axes, importance 0-5 in each cell of the upper triangle
+  const opt = v => `<option value="${v}">${v ? v : "–"}</option>`;
+  $("#grid").innerHTML = `<table class="grid"><tr><th></th>${C.map(c => `<th title="${esc(CLS[c].label)}"><span class="dot" style="--c:${CLS[c].color}"></span>${C_SHORT[c]}</th>`).join("")}</tr>` +
+    C.map((x, i) => `<tr><th title="${esc(CLS[x].label)}"><span class="dot" style="--c:${CLS[x].color}"></span>${C_SHORT[x]}</th>` + C.map((y, j) => {
+      if (j < i) return `<td></td>`;
+      const ck = [x, y].sort().join("|");
+      return `<td><select data-ck="${ck}" aria-label="${esc(C_SHORT[x] + " vs " + C_SHORT[y])}">${[0, 1, 2, 3, 4, 5].map(opt).join("")}</select></td>`;
+    }).join("") + `</tr>`).join("") + `</table>`;
+  $("#grid").onchange = e => { const ck = e.target.dataset.ck; if (!ck) return; state.rules.m = { ...state.rules.m, [ck]: +e.target.value }; custom(); };
+  document.querySelector(".quick").onclick = e => {
+    const g = e.target.dataset.g; if (!g) return;
+    state.rules.m = Object.fromEntries(CELLS.map(ck => [ck,
+      g === "none" ? 0 : g === "all" ? (state.rules.m[ck] || defaultLevel(ck)) : ck.split("|").includes("seismic") ? (state.rules.m[ck] || defaultLevel(ck)) : 0]));
+    custom();
+  };
   document.querySelectorAll('input[name="near"]').forEach(el => el.onchange = () => { state.rules.near = el.value; custom(); });
   $("#r-assumed").onchange = e => { state.rules.assumed = e.target.checked; custom(); };
-  $("#r-minov").onchange = e => { state.rules.minOv = +e.target.value; custom(); };
-  $("#r-maxwin").onchange = e => { state.rules.maxWin = +e.target.value; custom(); };
   $("#r-internal").onchange = e => { state.rules.internal = e.target.checked; custom(); };
+  $("#r-myside").innerHTML += C.map(c => `<option value="${c}">${esc(CLS[c].short.toLowerCase())}</option>`).join("");
+  $("#r-myside").onchange = e => { state.rules.mySide = e.target.value; custom(); };
+  // sliders update as you drag, at most once per frame
+  const slider = (id, key, toRule = Number) => {
+    let pending = false;
+    $(id).oninput = e => {
+      state.rules[key] = toRule(e.target.value);
+      sliderLabels();
+      if (pending) return;
+      pending = true;
+      requestAnimationFrame(() => { pending = false; custom(); });
+    };
+  };
+  slider("#r-notice", "notice");
+  slider("#r-minov", "minOv");
+  slider("#r-buffer", "buffer");
+  slider("#r-maxwin", "maxWin", v => +v >= 760 ? MAXWIN_NONE : +v);
+  slider("#r-minscore", "minScore");
 
   $("#preset").onclick = e => {
     const p = e.target.closest("button")?.dataset.p;
@@ -159,12 +228,30 @@ function buildControls() {
   $("#play").onclick = togglePlay;
   $("#example").onclick = example;
   $("#about-btn").onclick = () => $("#about").showModal();
+  $("#fb-btn").onclick = openFeedback;
+  $("#fb-copy").onclick = async () => {
+    try { await navigator.clipboard.writeText($("#fb-text").value); $("#fb-copy").textContent = "Copied"; }
+    catch { $("#fb-text").select(); document.execCommand("copy"); $("#fb-copy").textContent = "Copied"; }
+    setTimeout(() => $("#fb-copy").textContent = "Copy", 1500);
+  };
+  $("#fb-email").onclick = () => { location.href = `mailto:?subject=${encodeURIComponent("SIMOPS Radar feedback")}&body=${encodeURIComponent($("#fb-text").value)}`; };
+  $("#fb-clear").onclick = () => { if (confirm("Clear all your marks on this device?")) { FB = {}; saveFeedback(); renderList(); openFeedback(); } };
+  saveFeedback();
   $("#built").textContent = fmt(meta.updatedMs);
 
   $("#legend-items").innerHTML = ["seismic", "vessel", "rig", "subsea", "site"].map(k =>
     `<div class="row"><span class="sw" style="--c:${CLS[k].color}"></span>${CLS[k].label}</div>`).join("") +
     `<div class="row" id="lg-mine"><span class="sw mine" style="--c:#fff"></span>Selected operator's activity</div>` +
     `<div class="row"><span class="sw line"></span>Flagged clash, active on this date</div>`;
+}
+
+function sliderLabels() {
+  const r = state.rules, d = n => `${n} ${n === 1 ? "day" : "days"}`;
+  $("#o-notice").textContent = d(r.notice);
+  $("#o-minov").textContent = d(r.minOv);
+  $("#o-buffer").textContent = r.buffer ? d(r.buffer) + " apart" : "off";
+  $("#o-maxwin").textContent = r.maxWin >= MAXWIN_NONE ? "no limit" : d(r.maxWin);
+  $("#o-minscore").textContent = (+r.minScore).toFixed(2);
 }
 
 function custom() { state.preset = "custom"; state.showN = 40; update(); }
@@ -175,12 +262,20 @@ function syncControls() {
     b.setAttribute("aria-checked", b.dataset.p === state.preset);
     if (b.dataset.p === "custom") b.disabled = state.preset !== "custom";
   });
-  document.querySelectorAll("#types input").forEach(el => el.checked = state.rules.types.includes(el.value));
-  document.querySelectorAll('input[name="near"]').forEach(el => el.checked = el.value === state.rules.near);
-  $("#r-assumed").checked = state.rules.assumed;
-  $("#r-minov").value = state.rules.minOv;
-  $("#r-maxwin").value = state.rules.maxWin;
-  $("#r-internal").checked = state.rules.internal;
+  const r = state.rules;
+  document.querySelectorAll("#grid select").forEach(el => { el.value = r.m[el.dataset.ck] || 0; el.classList.toggle("off", !+el.value); });
+  document.querySelectorAll('input[name="near"]').forEach(el => el.checked = el.value === r.near);
+  $("#r-assumed").checked = r.assumed;
+  $("#r-notice").value = r.notice;
+  $("#r-notice").disabled = !r.assumed;
+  $("#r-minov").value = r.minOv;
+  $("#r-buffer").value = r.buffer;
+  $("#r-maxwin").value = r.maxWin >= MAXWIN_NONE ? 760 : r.maxWin;
+  $("#r-minscore").value = r.minScore;
+  $("#r-internal").checked = r.internal;
+  $("#r-myside").value = r.mySide;
+  $("#r-myside").disabled = state.op === "all";
+  sliderLabels();
   $("#lg-mine").hidden = state.op === "all";
 }
 
@@ -271,7 +366,7 @@ function renderList() {
     const live = p.os <= state.date && p.oe >= state.date;
     const chips = [
       `<span class="chip ${p.same ? "hot" : ""}">${p.same ? `same block ${p.a.block}` : `neighbouring blocks ${mine.block} and ${other.block}`}</span>`,
-      `<span class="chip">overlap ${p.ov} days</span>`,
+      p.ov > 0 ? `<span class="chip">overlap ${p.ov} days</span>` : `<span class="chip soft">near miss, ${p.gap} days apart</span>`,
       p.nAssumed ? `<span class="chip soft">end date assumed</span>` : `<span class="chip">both dated</span>`,
       p.longest > 150 ? `<span class="chip soft">long consent window (${p.longest} days)</span>` : "",
       p.shared ? `<span class="chip">same operator</span>` : "",
@@ -279,14 +374,77 @@ function renderList() {
     ].join("");
     return `<div class="alert${p.i === state.sel ? " sel" : ""}${live ? " live" : ""}" data-i="${p.i}" style="--sev:${sevColor(p.score)}">
       <div class="top"><span class="kind">${KIND[p.type]}</span><span class="score" title="Ranking score">${p.score.toFixed(2)}</span></div>
-      <div class="when">${fmtRange(p.os, p.oe)}${live ? " · active on the date shown" : ""}</div>
+      <div class="when">${p.ov > 0 ? fmtRange(p.os, p.oe) : `Gap ${fmtRange(p.os, p.oe)}`}${live ? " · active on the date shown" : ""}</div>
       <div class="who"><span class="tag">${tags[0]}</span><span class="act">${actLine(mine)}</span><span class="tag">${tags[1]}</span><span class="act">${actLine(other)}</span></div>
-      <div class="why">${chips}</div></div>`;
+      <div class="why">${chips}</div>
+      ${scoreDetails(p)}
+      ${feedbackBar(p)}</div>`;
   }).join("") + (items.length > shown.length ? `<div class="more">${items.length - shown.length} more · <button id="more">show more</button></div>` : "");
   $("#list").onclick = e => {
     if (e.target.id === "more") { state.showN += 60; renderList(); return; }
+    const fb = e.target.closest("[data-v]");
+    if (fb) { setVerdict(P[+fb.closest(".alert").dataset.i], fb.dataset.v); return; }
+    if (e.target.closest(".calc, .fb")) return;
     const el = e.target.closest(".alert"); if (el) select(+el.dataset.i);
   };
+  $("#list").onchange = e => {
+    if (!e.target.classList.contains("fb-note")) return;
+    const p = P[+e.target.closest(".alert").dataset.i];
+    if (FB[p.key]) { FB[p.key].note = e.target.value.trim(); saveFeedback(); }
+  };
+}
+
+function scoreDetails(p) {
+  const f = p.f, x = v => v.toFixed(2);
+  const rows = [
+    [`Importance of ${KIND[p.type].toLowerCase()} (${C_SHORT[p.a.cls]} vs ${C_SHORT[p.b.cls]})`, `${p.level} of 5`, f.w],
+    [p.same ? "Same block" : "Neighbouring block", "", f.near],
+    [p.nAssumed ? `${p.nAssumed === 2 ? "Both end dates" : "One end date"} assumed (${state.rules.notice}-day notice)` : "Both dates from the consent", "", f.dates],
+    [p.ov > 0 ? `Overlap ${p.ov} days (full credit from 30)` : `Near miss, ${p.gap} days apart (buffer ${state.rules.buffer})`, "", f.overlap],
+    [`Longest consent window ${p.longest} days (vaguer when long)`, "", f.window],
+  ];
+  return `<details class="calc"><summary>How it's scored</summary><table>${rows.map(([t, n, v]) =>
+    `<tr><td>${t}${n ? ` <small>${n}</small>` : ""}</td><td>× ${x(v)}</td></tr>`).join("")}
+    <tr class="tot"><td>Score</td><td>= ${p.score.toFixed(3)}</td></tr></table></details>`;
+}
+
+// ---------------------------------------------------------------- feedback (kept in this browser only)
+const FB_KEY = "simops-radar-feedback";
+let FB = {};
+try { FB = JSON.parse(localStorage.getItem(FB_KEY) || "{}") || {}; } catch { FB = {}; }
+function saveFeedback() {
+  try { localStorage.setItem(FB_KEY, JSON.stringify(FB)); } catch { /* storage unavailable: kept for this visit only */ }
+  const n = Object.keys(FB).length;
+  $("#fb-btn").textContent = n ? `Your feedback (${n})` : "Your feedback";
+}
+const V_LABEL = { real: "Real", not: "Not real", unsure: "Unsure" };
+function feedbackBar(p) {
+  const f = FB[p.key];
+  return `<div class="fb"><span>Worth a call?</span>${Object.entries(V_LABEL).map(([v, t]) =>
+    `<button type="button" data-v="${v}" class="${f?.v === v ? "on " + v : ""}">${t}</button>`).join("")}
+    ${f ? `<input class="fb-note" type="text" placeholder="Why? (optional)" value="${esc(f.note || "")}" aria-label="Note">` : ""}</div>`;
+}
+function describe(p) {
+  const [m, o] = orient(p);
+  const one = a => `${a.op}, ${CLS[a.cls].short.toLowerCase()}${a.field ? " at " + a.field : ""}${a.unit ? " (" + a.unit + ")" : ""}, block ${a.block}, ${iso(a.s)} to ${iso(a.e)}${a.assumed ? " (end assumed)" : ""}, ${a.key}`;
+  return `${KIND[p.type]}, ${p.ov > 0 ? `overlap ${p.ov} days from ${iso(p.os)}` : `${p.gap} days apart`}, score ${p.score.toFixed(2)}\n   ${one(m)}\n   ${one(o)}`;
+}
+function setVerdict(p, v) {
+  if (FB[p.key]?.v === v) delete FB[p.key];
+  else FB[p.key] = { v, note: FB[p.key]?.note || "", at: iso(Date.now()), what: describe(p) };
+  saveFeedback(); renderList();
+}
+function feedbackText() {
+  const items = Object.entries(FB).sort((a, b) => a[1].v.localeCompare(b[1].v));
+  return `SIMOPS Radar feedback, ${fmt(Date.now())}\nSettings when sent: ${location.href}\n\n` +
+    (items.length ? items.map(([k, f]) => `[${V_LABEL[f.v].toUpperCase()}] ${f.what}${f.note ? `\n   Note: ${f.note}` : ""}`).join("\n\n") : "(nothing marked yet)") + "\n";
+}
+function openFeedback() {
+  const n = Object.keys(FB).length;
+  const counts = Object.keys(V_LABEL).map(v => `${Object.values(FB).filter(f => f.v === v).length} ${V_LABEL[v].toLowerCase()}`).join(", ");
+  $("#fb-summary").textContent = n ? `${n} alert${n > 1 ? "s" : ""} marked: ${counts}.` : "Nothing marked yet. Use the Real / Not real / Unsure buttons on each alert.";
+  $("#fb-text").value = feedbackText();
+  $("#fb-dialog").showModal();
 }
 
 // ---------------------------------------------------------------- map
@@ -398,7 +556,7 @@ function select(i) {
   state.sel = state.sel === i ? null : i;
   if (state.sel != null) {
     const p = P[i];
-    const target = state.date >= p.os && state.date <= p.oe ? state.date : p.os + Math.min(7, Math.floor(p.ov / 2)) * DAY;
+    const target = state.date >= p.os && state.date <= p.oe ? state.date : p.ov > 0 ? p.os + Math.min(7, Math.floor(p.ov / 2)) * DAY : p.os;
     if (state.playing) togglePlay();
     setDate(target, false);
     fitSel();
@@ -419,7 +577,7 @@ function example() {
 // ---------------------------------------------------------------- state in the URL
 function saveHash() {
   const h = new URLSearchParams({ op: state.op, p: state.preset, d: iso(state.date) });
-  if (state.preset === "custom") h.set("r", JSON.stringify(state.rules));
+  if (state.preset === "custom") h.set("r", JSON.stringify({ ...state.rules, m: CELLS.map(ck => state.rules.m[ck] || 0).join("") }));
   history.replaceState(null, "", "#" + h.toString());
 }
 function readHash() {
@@ -427,7 +585,14 @@ function readHash() {
   if (h.get("op") && (h.get("op") === "all" || meta.operators.some(([n]) => n === h.get("op")))) state.op = h.get("op");
   const p = h.get("p");
   if (PRESETS[p]) { state.preset = p; state.rules = structuredClone(PRESETS[p]); }
-  if (p === "custom") { try { state.rules = { ...PRESETS.quiet, ...JSON.parse(h.get("r")) }; state.preset = "custom"; } catch { /* keep default */ } }
+  if (p === "custom") {
+    try {
+      const r = JSON.parse(h.get("r"));
+      const m = typeof r.m === "string" ? Object.fromEntries(CELLS.map((ck, i) => [ck, Math.min(5, +r.m[i] || 0)])) : PRESETS.quiet.m;
+      state.rules = { ...structuredClone(PRESETS.quiet), ...r, m };
+      state.preset = "custom";
+    } catch { /* keep default */ }
+  }
   const d = parse(h.get("d") || "");
   if (!isNaN(d)) { state.date = Math.min(Math.max(d, START), END); state.year = new Date(state.date).getUTCFullYear(); }
 }

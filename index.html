@@ -38,9 +38,15 @@
     <details id="rules" class="rules">
       <summary>Rules</summary>
       <div class="rules-body">
+        <p class="hint">Changes apply straight away and switch the setting to Custom. The page address keeps them, so you can send a link.</p>
         <fieldset>
-          <legend>Activity pairs to flag</legend>
-          <div id="types"></div>
+          <legend>Which pairings to flag, and how much each matters (– off, 1 low, 5 high)</legend>
+          <div id="grid" class="grid-wrap"></div>
+          <div class="quick">
+            <button type="button" class="mini" data-g="seismic">Seismic pairings only</button>
+            <button type="button" class="mini" data-g="all">All on</button>
+            <button type="button" class="mini" data-g="none">All off</button>
+          </div>
         </fieldset>
         <fieldset>
           <legend>Distance</legend>
@@ -49,16 +55,24 @@
         </fieldset>
         <fieldset>
           <legend>Dates</legend>
-          <label><input type="checkbox" id="r-assumed"> Include survey notices with no end date (assume 30 days)</label>
-          <label>Overlap at least <select id="r-minov"><option value="1">1 day</option><option value="7">7 days</option><option value="14">14 days</option><option value="30">30 days</option></select></label>
-          <label>Ignore consent windows longer than <select id="r-maxwin"><option value="120">4 months</option><option value="200">6½ months</option><option value="365">1 year</option><option value="99999">no limit</option></select></label>
+          <label><input type="checkbox" id="r-assumed"> Include survey notices (no end date given)</label>
+          <label class="sl">Assume a survey notice lasts <output id="o-notice"></output><input type="range" id="r-notice" min="10" max="90" step="5"></label>
+          <label class="sl">Overlap of at least <output id="o-minov"></output><input type="range" id="r-minov" min="1" max="60" step="1"></label>
+          <label class="sl">Also flag near misses up to <output id="o-buffer"></output><input type="range" id="r-buffer" min="0" max="30" step="1"></label>
+          <label class="sl">Ignore consent windows longer than <output id="o-maxwin"></output><input type="range" id="r-maxwin" min="30" max="760" step="10"></label>
+        </fieldset>
+        <fieldset>
+          <legend>Ranking</legend>
+          <label class="sl">Only show alerts scoring at least <output id="o-minscore"></output><input type="range" id="r-minscore" min="0" max="0.5" step="0.01"></label>
         </fieldset>
         <fieldset>
           <legend>Whose activities</legend>
           <label><input type="checkbox" id="r-internal"> Include clashes between my own activities</label>
+          <label>Only when my side is <select id="r-myside"><option value="any">any activity</option></select></label>
         </fieldset>
       </div>
     </details>
+    <button id="fb-btn" class="example fbtn" title="Your Real / Not real marks, to copy or email">Your feedback</button>
     <button id="example" class="example" title="Shell 3D seismic in 21/29 while Well Enhancer works at Gannet F">▶ Example: Gannet, August 2019</button>
   </section>
 
@@ -99,6 +113,22 @@
       <p>Pick an operator to see only the clashes that involve its own work. Turn the sensitivity down to see the few that are worth a phone call.</p>
       <p class="small">Limits: locations are licence blocks, not exact positions. Dates are consent windows, which are usually wider than the actual work. Survey notices have no end date, so 30 days is assumed.</p>
       <div class="row"><button value="ok">Close</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="fb-dialog">
+    <form method="dialog">
+      <h2>Your feedback</h2>
+      <p id="fb-summary"></p>
+      <p class="small">Marks are kept in this browser only. Copy or email them to send them on. The link at the top includes your current rule settings.</p>
+      <textarea id="fb-text" readonly rows="12"></textarea>
+      <div class="row">
+        <button type="button" id="fb-clear" class="ghost">Clear all</button>
+        <span class="grow"></span>
+        <button type="button" id="fb-copy" class="ghost">Copy</button>
+        <button type="button" id="fb-email" class="ghost">Email</button>
+        <button value="ok">Close</button>
+      </div>
     </form>
   </dialog>
 
