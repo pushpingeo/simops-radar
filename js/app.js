@@ -75,6 +75,7 @@ async function load() {
   meta = m;
   // consents often run into next year, so the timeline goes one year past the latest file when needed
   const lastFile = meta.years.at(-1);
+  meta.fileYears = [...meta.years];
   const maxEnd = Math.max(...acts.map(a => parse(a.end)));
   if (maxEnd > Date.UTC(lastFile, 11, 31)) meta.years = [...meta.years, lastFile + 1];
   START = Date.UTC(meta.years[0], 0, 1);
@@ -186,7 +187,8 @@ function syncControls() {
 function renderSummary() {
   const n = current.filter(p => inYear(p, state.year)).length;
   const who = state.op === "all" ? "across all operators" : `involving ${esc(state.op)}`;
-  const pYear = meta.years.length ? (current.length / meta.years.length).toFixed(1) : "";
+  const fy = meta.fileYears;
+  const pYear = (current.filter(p => p.os >= Date.UTC(fy[0], 0, 1) && p.os <= Date.UTC(fy.at(-1), 11, 31)).length / fy.length).toFixed(1);
   const nNew = current.filter(p => p.isNew).length;
   const tracking = parse(meta.trackingSince) > meta.newSince;
   const newLine = tracking
@@ -196,7 +198,7 @@ function renderSummary() {
     ? `<span class="big">${nNew}</span> flagged ${nNew === 1 ? "clash involves" : "clashes involve"} recent applications ${who}`
     : `<span class="big">${n}</span> flagged ${n === 1 ? "clash" : "clashes"} in ${state.year} ${who}`) +
     `<div class="sub">${state.preset === "custom" ? "Custom rules" : state.preset[0].toUpperCase() + state.preset.slice(1) + " setting"} ·
-    about ${pYear} a year over ${meta.years[0]}–${meta.years.at(-1)}</div><div class="sub fresh">${newLine}</div>`;
+    about ${pYear} a year over ${fy[0]}–${fy.at(-1)}</div><div class="sub fresh">${newLine}</div>`;
   const t = $("#new-toggle");
   if (t) t.onclick = () => { state.newOnly = !state.newOnly; state.showN = 40; renderSummary(); renderYears(); renderList(); };
 }
