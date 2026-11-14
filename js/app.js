@@ -1,8 +1,9 @@
 // SIMOPS Radar: filters pre-built activity pairs by operator and rules, and plays them back over time.
 
 const DAY = 86400000;
-const START = Date.UTC(2019, 0, 1);
-const END = Date.UTC(2026, 11, 31);
+let START = Date.UTC(2019, 0, 1);
+let END = Date.UTC(2026, 11, 31);
+const NEW_DAYS = 14;  // "new" = first seen or changed within this many days of the latest update
 const STYLE = "https://tiles.openfreemap.org/styles/positron";
 
 const CLS = {
@@ -45,6 +46,7 @@ const PRESETS = {
 const $ = s => document.querySelector(s);
 const fmt = ms => new Date(ms).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 const fmtShort = ms => new Date(ms).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
+const fmtRange = (a, b) => new Date(a).getUTCFullYear() === new Date(b).getUTCFullYear() ? `${fmtShort(a)} to ${fmt(b)}` : `${fmt(a)} to ${fmt(b)}`;
 const iso = ms => new Date(ms).toISOString().slice(0, 10);
 const parse = s => Date.parse(s + "T00:00:00Z");
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -62,7 +64,7 @@ function typeKey(a, b) {
 
 const state = {
   op: "all", preset: "quiet", rules: structuredClone(PRESETS.quiet),
-  year: 2026, date: Date.UTC(2026, 10, 13), sel: null, showN: 40, playing: null,
+  year: 2026, date: Date.UTC(2026, 10, 13), sel: null, showN: 40, playing: null, newOnly: false,
 };
 
 let A = [], P = [], meta = {}, map = null, mapReady = false, current = [], blocksGeo = null;
@@ -71,7 +73,20 @@ let A = [], P = [], meta = {}, map = null, mapReady = false, current = [], block
 async function load() {
   const [acts, pairs, m] = await Promise.all(["activities", "pairs", "meta"].map(n => fetch(`data/${n}.json`).then(r => r.json())));
   meta = m;
-  A = acts.map(a => ({ ...a, s: parse(a.start), e: parse(a.end), days: (parse(a.end) - parse(a.start)) / DAY + 1 }));
+  // consents often run into next year, so the timeline goes one year past the latest file when needed
+  const lastFile = meta.years.at(-1);
+  const maxEnd = Math.max(...acts.map(a => parse(a.end)));
+  if (maxEnd > Date.UTC(lastFile, 11, 31)) meta.years = [...meta.years, lastFile + 1];
+  START = Date.UTC(meta.years[0], 0, 1);
+  END = Date.UTC(meta.years.at(-1), 11, 31);
+  meta.updatedMs = parse(meta.updated);
+  meta.newSince = meta.updatedMs - (NEW_DAYS - 1) * DAY;
+  state.date = Math.min(Math.max(meta.updatedMs, START), END);
+  state.year = new Date(state.date).getUTCFullYear();
+  const recent = d => d && parse(d) >= meta.newSince && parse(d) > parse(meta.trackingSince);
+  A = acts.map(a => ({ ...a, s: parse(a.start), e: parse(a.end), days: (parse(a.end) - parse(a.start)) / DAY + 1,
+    isNew: recent(a.first) || recent(a.changed), newDate: recent(a.first) ? a.first : recent(a.changed) ? a.changed : null,
+    newKind: recent(a.first) ? "new" : "changed" }));
   P = pairs.map(([ia, ib, same, os, oe, ov], i) => {
     const a = A[ia], b = A[ib];
     const ck = [a.cls, b.cls].sort().join("|");
@@ -80,7 +95,7 @@ async function load() {
     const longest = Math.max(a.days, b.days);
     const score = w * (same ? 1 : 0.6) * Math.pow(0.6, nAssumed) * Math.min(ov, 30) / 30 / (1 + longest / 120);
     const shared = a.owners.some(o => b.owners.includes(o));
-    return { i, a, b, same: !!same, os: parse(os), oe: parse(oe), ov, type: typeKey(a.cls, b.cls), w, nAssumed, longest, score, shared };
+    return { i, a, b, same: !!same, os: parse(os), oe: parse(oe), ov, type: typeKey(a.cls, b.cls), w, nAssumed, longest, score, shared, isNew: a.isNew || b.isNew };
   });
 }
 
@@ -142,7 +157,7 @@ function buildControls() {
   $("#play").onclick = togglePlay;
   $("#example").onclick = example;
   $("#about-btn").onclick = () => $("#about").showModal();
-  $("#built").textContent = fmt(parse(meta.built));
+  $("#built").textContent = fmt(meta.updatedMs);
 
   $("#legend-items").innerHTML = ["seismic", "vessel", "rig", "subsea", "site"].map(k =>
     `<div class="row"><span class="sw" style="--c:${CLS[k].color}"></span>${CLS[k].label}</div>`).join("") +
@@ -172,20 +187,29 @@ function renderSummary() {
   const n = current.filter(p => inYear(p, state.year)).length;
   const who = state.op === "all" ? "across all operators" : `involving ${esc(state.op)}`;
   const pYear = meta.years.length ? (current.length / meta.years.length).toFixed(1) : "";
-  $("#summary").innerHTML = `<span class="big">${n}</span> flagged ${n === 1 ? "clash" : "clashes"} in ${state.year} ${who}
-    <div class="sub">${state.preset === "custom" ? "Custom rules" : state.preset[0].toUpperCase() + state.preset.slice(1) + " setting"} ·
-    about ${pYear} a year over ${meta.years[0]}–${meta.years.at(-1)}</div>`;
+  const nNew = current.filter(p => p.isNew).length;
+  const tracking = parse(meta.trackingSince) > meta.newSince;
+  const newLine = tracking
+    ? `Data updated ${fmt(meta.updatedMs)}. Checked every morning; tracking new applications since ${fmt(parse(meta.trackingSince))}.`
+    : `Data updated ${fmt(meta.updatedMs)}. <button id="new-toggle" class="linkish${state.newOnly ? " on" : ""}" ${nNew ? "" : "disabled"}>${state.newOnly ? "Show all years" : `${nNew} ${nNew === 1 ? "alert involves" : "alerts involve"} applications new or changed since ${fmtShort(meta.newSince)}`}</button>`;
+  $("#summary").innerHTML = (state.newOnly
+    ? `<span class="big">${nNew}</span> flagged ${nNew === 1 ? "clash involves" : "clashes involve"} recent applications ${who}`
+    : `<span class="big">${n}</span> flagged ${n === 1 ? "clash" : "clashes"} in ${state.year} ${who}`) +
+    `<div class="sub">${state.preset === "custom" ? "Custom rules" : state.preset[0].toUpperCase() + state.preset.slice(1) + " setting"} ·
+    about ${pYear} a year over ${meta.years[0]}–${meta.years.at(-1)}</div><div class="sub fresh">${newLine}</div>`;
+  const t = $("#new-toggle");
+  if (t) t.onclick = () => { state.newOnly = !state.newOnly; state.showN = 40; renderSummary(); renderYears(); renderList(); };
 }
 
 function renderYears() {
   $("#years").innerHTML = meta.years.map(y => {
     const n = current.filter(p => inYear(p, y)).length;
-    return `<button data-y="${y}" aria-pressed="${y === state.year}"><b class="${n ? "" : "zero"}">${n}</b><small>${y}</small></button>`;
+    return `<button data-y="${y}" aria-pressed="${y === state.year && !state.newOnly}"><b class="${n ? "" : "zero"}">${n}</b><small>${y}</small></button>`;
   }).join("");
   $("#years").onclick = e => {
     const y = +e.target.closest("button")?.dataset.y;
     if (!y) return;
-    state.sel = null; state.showN = 40;
+    state.sel = null; state.showN = 40; state.newOnly = false;
     const d = new Date(state.date);
     setDate(Date.UTC(y, d.getUTCMonth(), Math.min(d.getUTCDate(), 28)), false);
   };
@@ -209,7 +233,7 @@ function renderTimeline() {
     lanesEnd[lane] = p.oe + 2 * DAY;
     if (lane >= maxLanes) continue;
     const y = 2 + lane * laneH;
-    bars += `<rect class="bar${p.i === state.sel ? " sel" : ""}" data-i="${p.i}" x="${x(p.os)}" y="${y}" width="${Math.max(2, x(p.oe + DAY) - x(p.os))}" height="${laneH - 1.5}" rx="1.5" fill="${sevColor(p.score)}"><title>${esc(KIND[p.type])}: ${fmtShort(p.os)} to ${fmtShort(p.oe)}</title></rect>`;
+    bars += `<rect class="bar${p.i === state.sel ? " sel" : ""}" data-i="${p.i}" x="${x(p.os)}" y="${y}" width="${Math.max(2, x(p.oe + DAY) - x(p.os))}" height="${laneH - 1.5}" rx="1.5" fill="${sevColor(p.score)}"><title>${esc(KIND[p.type])}: ${fmtRange(p.os, p.oe)}</title></rect>`;
   }
   let axis = "";
   for (let m = 0; m < 12; m++) {
@@ -226,13 +250,15 @@ function renderTimeline() {
 function actLine(a) {
   const what = [a.label, a.field && `at ${esc(a.field)}`, a.unit && `· ${esc(a.unit)}`].filter(Boolean).join(" ");
   return `<span class="dot" style="--c:${CLS[a.cls].color}"></span><b>${esc(a.op)}</b> · ${esc(CLS[a.cls].short)}: ${what}
-    <div class="ref">block ${a.block} · ${fmtShort(a.s)} to ${fmt(a.e)}${a.assumed ? " (end assumed)" : ""} · ${esc(a.refs.slice(0, 2).join(", "))}${a.refs.length > 2 ? "…" : ""}</div>`;
+    <div class="ref">block ${a.block} · ${fmtRange(a.s, a.e)}${a.assumed ? " (end assumed)" : ""} · ${esc(a.refs.slice(0, 2).join(", "))}${a.refs.length > 2 ? "…" : ""}</div>`;
 }
 
 function renderList() {
-  const items = current.filter(p => inYear(p, state.year));
+  const items = state.newOnly ? current.filter(p => p.isNew) : current.filter(p => inYear(p, state.year));
   if (!items.length) {
-    $("#list").innerHTML = `<div class="empty">Nothing flagged in ${state.year} for this operator with these rules. Try another year, or turn the sensitivity up.</div>`;
+    $("#list").innerHTML = state.newOnly
+      ? `<div class="empty">No flagged clashes involve recent applications for this operator with these rules.</div>`
+      : `<div class="empty">Nothing flagged in ${state.year} for this operator with these rules. Try another year, or turn the sensitivity up.</div>`;
     return;
   }
   const shown = items.slice(0, state.showN);
@@ -246,10 +272,11 @@ function renderList() {
       p.nAssumed ? `<span class="chip soft">end date assumed</span>` : `<span class="chip">both dated</span>`,
       p.longest > 150 ? `<span class="chip soft">long consent window (${p.longest} days)</span>` : "",
       p.shared ? `<span class="chip">same operator</span>` : "",
+      ...[mine, other].filter(a => a.isNew).map(a => `<span class="chip new">${a.newKind} ${fmtShort(parse(a.newDate))}: ${esc(a.refs[0].split("/").slice(0, 2).join("/"))}</span>`),
     ].join("");
     return `<div class="alert${p.i === state.sel ? " sel" : ""}${live ? " live" : ""}" data-i="${p.i}" style="--sev:${sevColor(p.score)}">
       <div class="top"><span class="kind">${KIND[p.type]}</span><span class="score" title="Ranking score">${p.score.toFixed(2)}</span></div>
-      <div class="when">${fmtShort(p.os)} to ${fmt(p.oe)}${live ? " · active on the date shown" : ""}</div>
+      <div class="when">${fmtRange(p.os, p.oe)}${live ? " · active on the date shown" : ""}</div>
       <div class="who"><span class="tag">${tags[0]}</span><span class="act">${actLine(mine)}</span><span class="tag">${tags[1]}</span><span class="act">${actLine(other)}</span></div>
       <div class="why">${chips}</div></div>`;
   }).join("") + (items.length > shown.length ? `<div class="more">${items.length - shown.length} more · <button id="more">show more</button></div>` : "");
@@ -329,7 +356,7 @@ function popup(e) {
   const block = A[[...ids][0]].block;
   const here = A.filter(a => a.block === block && a.s <= state.date && a.e >= state.date);
   const html = `<div class="pop"><h4>Block ${block} on ${fmt(state.date)}</h4><ul>` + here.map(a =>
-    `<li class="${state.op !== "all" && a.owners.includes(state.op) ? "mine" : ""}"><span class="dot" style="--c:${CLS[a.cls].color}"></span>${esc(a.op)}: ${esc(CLS[a.cls].short)}${a.field ? " at " + esc(a.field) : ""}${a.unit ? " · " + esc(a.unit) : ""}<br><small>${fmtShort(a.s)} to ${fmt(a.e)}${a.assumed ? " (end assumed)" : ""}</small></li>`).join("") + `</ul></div>`;
+    `<li class="${state.op !== "all" && a.owners.includes(state.op) ? "mine" : ""}"><span class="dot" style="--c:${CLS[a.cls].color}"></span>${esc(a.op)}: ${esc(CLS[a.cls].short)}${a.field ? " at " + esc(a.field) : ""}${a.unit ? " · " + esc(a.unit) : ""}<br><small>${fmtRange(a.s, a.e)}${a.assumed ? " (end assumed)" : ""}</small></li>`).join("") + `</ul></div>`;
   new maplibregl.Popup({ closeButton: true, maxWidth: "300px" }).setLngLat(e.lngLat).setHTML(html).addTo(map);
 }
 
@@ -411,6 +438,7 @@ function update() {
 (async function main() {
   await load();
   buildControls();
+  document.querySelector(".brand p").textContent = `Early warning of clashing offshore operations, from public consent data. UK continental shelf, ${meta.years[0]} onwards, updated daily.`;
   readHash();
   $("#date").value = Math.round((state.date - START) / DAY);
   $("#date-label").textContent = fmt(state.date);

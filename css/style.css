@@ -81,6 +81,11 @@ main { flex: 1; display: grid; grid-template-columns: minmax(0, 11fr) minmax(400
 .summary { padding: 10px 16px; background: #fff; border-bottom: 1px solid var(--line); font-size: 13.5px; }
 .summary .big { font-size: 22px; font-weight: 600; font-family: var(--mono); margin-right: 6px; }
 .summary .sub { color: var(--ink-2); font-size: 12.5px; }
+.summary .fresh { margin-top: 3px; }
+.linkish { background: none; border: 0; padding: 0; color: var(--sea); text-decoration: underline; font: inherit; cursor: pointer; border-radius: 0; }
+.linkish:disabled { color: var(--ink-2); text-decoration: none; cursor: default; opacity: 1; }
+.linkish.on { font-weight: 600; }
+.chip.new { background: #e6fcf5; border-color: #96f2d7; color: #087f5b; }
 .years { display: flex; gap: 4px; padding: 8px 12px; background: #fff; border-bottom: 1px solid var(--line); overflow-x: auto; }
 .years button { background: none; color: var(--ink-2); border: 1px solid var(--line); padding: 3px 8px 2px; display: flex; flex-direction: column; align-items: center; min-width: 50px; flex-shrink: 0; }
 .years button b { font-family: var(--mono); font-size: 14px; color: var(--ink); font-weight: 500; }

@@ -1,0 +1,68 @@
+name: Daily PETS update
+
+# PETS refreshes at 05:00 UK time. 05:40 UTC is 05:40 in winter and 06:40 in summer.
+# GitHub can start scheduled runs a few minutes late; that's fine here.
+on:
+  schedule:
+    - cron: "40 5 * * *"
+  workflow_dispatch:
+    inputs:
+      years:
+        description: "Years to fetch, space separated (blank = this year and last year)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: scripts/requirements.txt
+
+      - name: Install
+        run: |
+          pip install -r scripts/requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Download PETS spreadsheets
+        run: python scripts/fetch_pets.py work/xls ${{ github.event.inputs.years }}
+
+      - name: Convert to CSV
+        run: python scripts/xls_to_csv.py work/xls raw/pets
+
+      - name: Rebuild data
+        run: python scripts/build_data.py raw/pets raw/blocks data --today "$(TZ=Europe/London date +%F)"
+
+      - name: Commit if anything changed
+        run: |
+          git config user.name "simops-radar bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add raw/pets data
+          if git diff --cached --quiet; then
+            echo "No changes in PETS today."
+          else
+            summary=$(python scripts/change_summary.py "$(TZ=Europe/London date +%F)")
+            git commit -m "PETS update $(TZ=Europe/London date +%F): ${summary}"
+            git push
+          fi
+
+      - name: Keep the debug screenshots if the download failed
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fetch-debug
+          path: fetch-debug/
+          if-no-files-found: ignore
