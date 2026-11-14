@@ -15,10 +15,27 @@
 <body>
   <header>
     <div class="brand">
-      <h1>SIMOPS Radar</h1>
-      <p>Early warning of clashing offshore operations, from public consent data. UK continental shelf, 2019 to 2026.</p>
+      <svg class="mark" viewBox="0 0 44 44" aria-hidden="true">
+        <defs>
+          <radialGradient id="sweep-g" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(22 22) scale(20)">
+            <stop offset="0" stop-color="#63e6be" stop-opacity="0.65"/><stop offset="1" stop-color="#63e6be" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="22" cy="22" r="20" class="ring"/><circle cx="22" cy="22" r="13" class="ring"/><circle cx="22" cy="22" r="6" class="ring"/>
+        <path d="M22 2v40M2 22h40" class="ring"/>
+        <g class="sweep"><path d="M22 22L22 2A20 20 0 0 1 39.3 12Z" fill="url(#sweep-g)"/><path d="M22 22L22 2" class="beam"/></g>
+        <circle cx="30" cy="13" r="2.2" class="blip a"/><circle cx="14" cy="29" r="2.2" class="blip b"/>
+      </svg>
+      <div class="titles">
+        <h1>SIMOPS <span>Radar</span></h1>
+        <p id="tagline">Early warning of clashing offshore operations on the UK continental shelf</p>
+      </div>
     </div>
-    <button id="about-btn" class="icon" title="About this demo" aria-label="About">ⓘ</button>
+    <div class="hdr-right">
+      <span class="pill live" id="live-pill"><i></i><span>Updated daily from public consents</span></span>
+      <button type="button" class="pill ai" id="ai-pill" title="How AI was used">AI-assisted</button>
+      <button id="about-btn" class="icon" title="About this demo" aria-label="About">ⓘ</button>
+    </div>
   </header>
 
   <section class="toolbar">
@@ -113,6 +130,8 @@
       <p>When two offshore operations need the same patch of sea at the same time, one of them has to wait or work around the other. That usually means a costly vessel or rig standing by, a survey line given up, or a plan rearranged at short notice. Finding out weeks ahead turns that into a phone call between two companies.</p>
       <p>Every survey, rig move, well intervention and pipeline job on the UK shelf needs a consent from the regulator (OPRED), and the list is public. SIMOPS Radar reads that list every morning, finds activities in the same or a neighbouring block whose consent windows overlap, and ranks them by how likely they are to matter.</p>
       <p>Pick an operator to see only clashes involving its work, and use Watching to narrow that to, say, its seismic surveys or rigs. Quiet shows the few worth a call. Rules lets you set what counts and shows how each score is made up.</p>
+      <h3 id="about-ai">How AI was used</h3>
+      <p class="small">I designed SIMOPS Radar and built it with an AI assistant (Claude) doing much of the coding, data cleaning and testing. The alerts themselves don't come from AI: they come from fixed rules you can see and change under Rules, and every score can be traced back to the public consent data.</p>
       <h3>What the consents mean</h3>
       <p class="small">Each job is one application (for example WIA for a well intervention, DRA for drilling, SA for a standalone survey) with several consents under it. The ones that matter here:</p>
       <ul class="small">

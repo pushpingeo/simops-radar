@@ -226,7 +226,7 @@ function buildControls() {
   range.min = 0; range.max = Math.round((END - START) / DAY);
   range.oninput = () => setDate(START + range.value * DAY, true);
   $("#play").onclick = togglePlay;
-  $("#about-btn").onclick = () => { $("#about").showModal(); $("#about").scrollTop = 0; };
+  $("#about-btn").onclick = () => { $("#about").showModal(); setTimeout(() => { $("#about").scrollTop = 0; }, 30); };
   $("#fb-btn").onclick = openFeedback;
   $("#fb-copy").onclick = async () => {
     try { await navigator.clipboard.writeText($("#fb-text").value); $("#fb-copy").textContent = "Copied"; }
@@ -443,9 +443,9 @@ function scoreDetails(p) {
 const API = location.hostname === "localhost" ? "http://localhost:8787" : "https://simops-radar-api.robdunfey.workers.dev";
 let INVITED = false;
 try {
-  if (new URLSearchParams(location.search).has("invite")) localStorage.setItem("simops-radar-invite", "1");
+  if (/[?&#]invite\b/.test(location.search + location.hash)) localStorage.setItem("simops-radar-invite", "1");
   INVITED = localStorage.getItem("simops-radar-invite") === "1";
-} catch { INVITED = new URLSearchParams(location.search).has("invite"); }
+} catch { INVITED = /[?&#]invite\b/.test(location.search + location.hash); }
 
 async function post(path, body) {
   try {
@@ -678,7 +678,9 @@ function update() {
 (async function main() {
   await load();
   buildControls();
-  document.querySelector(".brand p").textContent = `Early warning of clashing offshore operations, from public consent data. UK continental shelf, ${meta.years[0]} onwards, updated daily.`;
+  $("#live-pill span").textContent = `Updated ${fmtShort(meta.updatedMs)} · ${meta.years[0]} onwards`;
+  $("#live-pill").title = `Built from OPRED's public consent data, checked every morning. Last changed ${fmt(meta.updatedMs)}.`;
+  $("#ai-pill").onclick = () => { $("#about").showModal(); setTimeout(() => { const d = $("#about"); d.scrollTop = $("#about-ai").offsetTop - 16; }, 30); };
   readHash();
   $("#date").value = Math.round((state.date - START) / DAY);
   $("#date-label").textContent = fmt(state.date);
