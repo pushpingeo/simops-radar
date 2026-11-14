@@ -182,9 +182,10 @@ function recompute() {
 function buildControls() {
   const op = $("#op");
   op.innerHTML = `<option value="all">All companies</option>` +
-    meta.operators.filter(([, n]) => n >= 3).map(([name]) => `<option value="${esc(name)}">${esc(name)}</option>`).join("") +
-    `<optgroup label="Fewer than 3 applications">` +
-    meta.operators.filter(([, n]) => n < 3).sort().map(([name]) => `<option value="${esc(name)}">${esc(name)}</option>`).join("") + `</optgroup>`;
+    `<optgroup label="Main companies">` +
+    meta.operators.filter(([, n]) => n >= 3).sort(([a], [b]) => a.localeCompare(b)).map(([name]) => `<option value="${esc(name)}">${esc(name)}</option>`).join("") + `</optgroup>` +
+    `<optgroup label="Others (fewer than 3 applications)">` +
+    meta.operators.filter(([, n]) => n < 3).sort(([a], [b]) => a.localeCompare(b)).map(([name]) => `<option value="${esc(name)}">${esc(name)}</option>`).join("") + `</optgroup>`;
   op.onchange = () => { state.op = op.value; state.sel = null; state.showN = 40; update(); };
 
   // pairing grid: activity types on both axes, importance 0-5 in each cell of the upper triangle
@@ -315,7 +316,7 @@ function renderSummary() {
     const pYear = Math.round(current.filter(p => isPast(p) && p.os >= yStart(fy[0])).length / Math.max(1, (TODAY - yStart(fy[0])) / (365.25 * DAY)));
     html = `<span class="big">${n}</span> ${n === 1 ? "clash" : "clashes"} in ${state.year} ${who}` +
       `<div class="sub">${PRESET_TEXT[state.preset]} · about ${pYear} a year since ${fy[0]}</div>` +
-      `<div class="sub ask">Looking back is how the rules get checked. If you know what happened, mark each clash 👍 or 👎.</div>`;
+      `<div class="sub ask">Looking back is how the rules get checked. If you know what happened, mark each clash below.</div>`;
   }
   if (INVITED && state.op !== "all") html += `<div class="sub"><button id="alert-btn" class="linkish">✉ Email me when alerts start for ${esc(state.op)}</button></div>`;
   $("#summary").innerHTML = html;
@@ -542,7 +543,7 @@ async function submitSignup(remove) {
   $("#su-form").hidden = true; $("#su-done").hidden = false;
   $("#su-done-text").textContent = remove
     ? "Done. If that address was on the list, it has been removed."
-    : `Thanks. You'll hear from me when alerts start for ${$("#su-what").textContent}. Nothing else.`;
+    : `Thanks. We'll let you know when alerts start for ${$("#su-what").textContent}, plus the odd product update. Nothing else.`;
 }
 async function sendFeedback() {
   const msg = $("#fb-msg"), email = $("#fb-email-addr").value.trim();
@@ -562,9 +563,15 @@ function saveFeedback() {
   const n = Object.keys(FB).length;
   $("#fb-btn").textContent = n ? `Send feedback (${n})` : "Send feedback";
 }
+const THUMB = '<path d="M7 10v11H3V10h4zm2 11h8.3a2 2 0 0 0 2-1.6l1.3-7A2 2 0 0 0 18.6 10H14l.8-4.2A1.6 1.6 0 0 0 13.2 4c-.5 0-.9.2-1.2.6L9 10v11z"/>';
+const ICON = {
+  up: `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${THUMB}</svg>`,
+  down: `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" style="transform:scaleY(-1)">${THUMB}</svg>`,
+  unsure: `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.6v.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1.2"/></svg>`,
+};
 const V_LABEL = {
-  ahead: { real: ["👍", "Useful"], not: ["👎", "Not useful"] },
-  back: { real: ["👍", "Real clash"], not: ["👎", "Not a clash"], unsure: ["🤷", "Not sure"] },
+  ahead: { real: [ICON.up, "Useful"], not: [ICON.down, "Not useful"] },
+  back: { real: [ICON.up, "Real clash"], not: [ICON.down, "Not a clash"], unsure: [ICON.unsure, "Not sure"] },
 };
 const vText = f => (V_LABEL[f.mode || "back"][f.v] || ["", f.v])[1];
 function feedbackBar(p) {
@@ -594,7 +601,7 @@ function openFeedback() {
   const tally = {};
   for (const f of Object.values(FB)) { const t = vText(f).toLowerCase(); tally[t] = (tally[t] || 0) + 1; }
   const counts = Object.entries(tally).map(([t, c]) => `${c} ${t}`).join(", ");
-  $("#fb-summary").textContent = n ? `${n} clash${n > 1 ? "es" : ""} marked: ${counts}.` : "Nothing marked yet. Use the 👍 and 👎 buttons on each clash.";
+  $("#fb-summary").textContent = n ? `${n} clash${n > 1 ? "es" : ""} marked: ${counts}.` : "Nothing marked yet. Use the thumbs up and down buttons on each clash.";
   $("#fb-text").value = feedbackText();
   $("#fb-msg").textContent = "";
   $("#fb-dialog").showModal();

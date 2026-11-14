@@ -106,7 +106,8 @@ main { flex: 1; display: grid; grid-template-columns: minmax(0, 5fr) minmax(460p
 #date-label { font: 500 13px var(--mono); white-space: nowrap; min-width: 92px; text-align: right; }
 
 /* side panel */
-.side { display: flex; flex-direction: column; border-left: 1px solid var(--line); background: var(--paper); min-height: 0; }
+.side { display: flex; flex-direction: column; border-left: 1px solid var(--line); background: var(--paper); min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.side > * { flex-shrink: 0; }
 .summary { padding: 10px 16px; background: #fff; border-bottom: 1px solid var(--line); font-size: 13.5px; }
 .summary .big { font-size: 22px; font-weight: 600; font-family: var(--mono); margin-right: 6px; }
 .summary .sub { color: var(--ink-2); font-size: 12.5px; }
@@ -131,7 +132,7 @@ main { flex: 1; display: grid; grid-template-columns: minmax(0, 5fr) minmax(460p
 #timeline .bar:hover, #timeline .bar.sel { stroke: var(--ink); stroke-width: 1.5; }
 #timeline .now { stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 3 2; }
 
-.list { flex: 1; overflow-y: auto; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.list { flex: 1 0 auto; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
 .list > * { flex-shrink: 0; }
 .empty { color: var(--ink-2); font-size: 13px; padding: 10px 4px; }
 .alert { background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--sev, var(--warn)); border-radius: 8px; padding: 8px 10px; cursor: pointer; }
@@ -188,6 +189,7 @@ dialog::backdrop { background: rgba(10, 25, 40, 0.45); }
   .map-wrap { height: 52vh; }
   .side { border-left: 0; border-top: 1px solid var(--line); }
   .list { overflow: visible; }
+  .side { overflow: visible; }
   .legend { font-size: 11.5px; padding: 5px 8px; }
   .timebar { bottom: 20px; }
 }
@@ -224,9 +226,9 @@ button.mini:hover { border-color: var(--sea); }
 .fb span { margin-right: 2px; }
 .fb button { background: #fff; color: var(--ink-2); border: 1px solid var(--line); padding: 1px 9px; font-size: 12px; border-radius: 99px; }
 .fb button:hover { border-color: var(--ink-2); }
-.fb button.on.real { background: #e6fcf5; border-color: #63e6be; color: #087f5b; }
-.fb button.on.not { background: #fff5f5; border-color: #ffa8a8; color: #c92a2a; }
-.fb button.on.unsure { background: #fff9db; border-color: #ffd43b; color: #946c00; }
+
+
+
 .fb-note { flex: 1 1 160px; min-width: 120px; font: 12px var(--sans); padding: 2px 7px; border: 1px solid var(--line); border-radius: 6px; }
 .fbtn { margin-left: auto; }
 #fb-dialog { max-width: 620px; width: calc(100vw - 32px); }
@@ -260,7 +262,7 @@ dialog label.tick input { margin-top: 3px; }
 #signup { max-width: 480px; width: calc(100vw - 32px); }
 
 /* coming up / look back */
-.modes { display: flex; gap: 0; padding: 8px 12px 0; background: #fff; border-bottom: 1px solid var(--line); }
+.modes { display: flex; gap: 0; padding: 8px 12px 0; background: #fff; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 3; }
 .modes button { background: none; color: var(--ink-2); border: 0; border-bottom: 2.5px solid transparent; border-radius: 0; padding: 6px 14px 7px; font: 600 14px var(--sans); }
 .modes button b { display: inline-block; min-width: 22px; margin-left: 4px; padding: 0 6px; border-radius: 99px; background: #e7f0f6; color: var(--sea); font: 600 12px var(--mono); }
 .modes button[aria-selected="true"] { color: var(--sea); border-bottom-color: var(--sea); }
@@ -291,3 +293,13 @@ dialog label.tick input { margin-top: 3px; }
   .modes button { flex: 1; }
   #timeline { height: 110px; }
 }
+
+/* feedback buttons: site accents, thumbs down in grey */
+.fb .ic { width: 15px; height: 15px; fill: currentColor; flex: none; }
+.fb button[data-v="real"]:hover { color: #087f5b; border-color: #63e6be; }
+.fb button[data-v="not"]:hover { color: #495057; border-color: #adb5bd; }
+.fb button[data-v="unsure"]:hover { color: var(--sea); border-color: #a5c3d6; }
+.fb button.on.real { background: #e6fcf5; border-color: #63e6be; color: #087f5b; }
+.fb button.on.not { background: #f1f3f5; border-color: #adb5bd; color: #343a40; }
+.fb button.on.unsure { background: #e7f0f6; border-color: #a5c3d6; color: var(--sea); }
+.summary .ask { color: var(--sea); background: #e7f0f6; }

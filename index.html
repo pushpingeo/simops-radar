@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="css/style.css?v=2026-11-14d">
+  <link rel="stylesheet" href="css/style.css?v=2026-11-14e">
   <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.1/dist/maplibre-gl.js"></script>
 </head>
 <body>
@@ -93,7 +93,7 @@
         </fieldset>
       </div>
     </details>
-    <button id="fb-btn" class="example fbtn" title="Send your 👍 / 👎 marks and notes">Send feedback</button>
+    <button id="fb-btn" class="example fbtn" title="Send your marks and notes">Send feedback</button>
   </section>
 
   <main>
@@ -125,7 +125,7 @@
         <a href="https://opendata-nstauthority.hub.arcgis.com/" target="_blank" rel="noopener">NSTA</a> blocks.
         Contains public sector information licensed under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener">Open Government Licence v3.0</a>.
         Dates are consent windows, not confirmed operations. Advisory only.
-        Built by Rob Dunfey · <a href="https://github.com/pushpingeo/simops-radar" target="_blank" rel="noopener">source</a> · <a href="privacy.html" target="_blank">privacy</a>.
+        Built by the SIMOPS Radar team · <a href="https://github.com/pushpingeo/simops-radar" target="_blank" rel="noopener">source</a> · <a href="privacy.html" target="_blank">privacy</a>.
       </footer>
     </section>
   </main>
@@ -135,10 +135,10 @@
       <h2>What this is</h2>
       <p>When two offshore operations need the same patch of sea at the same time, one of them has to wait or work around the other. That usually means a costly vessel or rig standing by, a survey line given up, or a plan rearranged at short notice. Finding out weeks ahead turns that into a phone call between two companies.</p>
       <p>Every survey, rig move, well intervention and pipeline job on the UK shelf needs a consent from the regulator (OPRED), and the list is public. SIMOPS Radar reads that list every morning, finds activities in the same or a neighbouring block whose consent windows overlap, and ranks them by how likely they are to matter.</p>
-      <p><b>Coming up</b> lists clashes that haven't finished yet, soonest first. <b>Look back</b> shows past years, which is how the rules get checked: if you know what happened, a quick 👍 or 👎 helps.</p>
+      <p><b>Coming up</b> lists clashes that haven't finished yet, soonest first. <b>Look back</b> shows past years, which is how the rules get checked: if you know what happened, a quick thumbs up or down helps.</p>
       <p>Pick a company to see only clashes involving its work, and use Watching to narrow that to, say, its seismic surveys or rigs. Quiet shows the few worth a call. Rules lets you set what counts, and each clash shows why it was rated High, Medium or Low.</p>
       <h3 id="about-ai">How AI was used</h3>
-      <p class="small">I designed SIMOPS Radar and built it with an AI assistant (Claude) doing much of the coding, data cleaning and testing. The alerts themselves don't come from AI: they come from fixed rules you can see and change under Rules, and every score can be traced back to the public consent data.</p>
+      <p class="small">We designed SIMOPS Radar and built it with an AI assistant (Claude) doing much of the coding, data cleaning and testing. The alerts themselves don't come from AI: they come from fixed rules you can see and change under Rules, and every score can be traced back to the public consent data.</p>
       <h3>What the consents mean</h3>
       <p class="small">Each job is one application (for example WIA for a well intervention, DRA for drilling, SA for a standalone survey) with several consents under it. The ones that matter here:</p>
       <ul class="small">
@@ -163,14 +163,14 @@
       <label class="fld">Anything else? (optional)<textarea id="fb-extra" rows="2"></textarea></label>
       <label class="fld">Your email, if you'd like a reply (optional)<input id="fb-email-addr" type="email" autocomplete="email"></label>
       <input id="fb-hp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <p class="small">Send to Rob stores your marks, notes and (if given) your email on the SIMOPS Radar server. See the <a href="privacy.html" target="_blank">privacy note</a>.</p>
+      <p class="small">Sending stores your marks, notes and (if given) your email on the SIMOPS Radar server. See the <a href="privacy.html" target="_blank">privacy note</a>.</p>
       <p id="fb-msg" class="msg" role="status"></p>
       <div class="row">
         <button type="button" id="fb-clear" class="ghost">Clear all</button>
         <span class="grow"></span>
         <button type="button" id="fb-copy" class="ghost">Copy</button>
         <button type="button" id="fb-email" class="ghost">Email</button>
-        <button type="button" id="fb-send">Send to Rob</button>
+        <button type="button" id="fb-send">Send</button>
         <button value="ok" class="ghost">Close</button>
       </div>
     </form>
@@ -180,10 +180,10 @@
     <form method="dialog">
       <h2>Email alerts</h2>
       <div id="su-form">
-        <p>Alerts aren't switched on yet. Leave your work email and I'll let you know when they start for <b id="su-what"></b>, with the settings you have now.</p>
+        <p>Alerts aren't switched on yet. Leave your work email and we'll let you know when they start for <b id="su-what"></b>, with the settings you have now.</p>
         <label class="fld">Work email<input id="su-email" type="email" autocomplete="email" required></label>
         <input id="su-hp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <label class="tick"><input type="checkbox" id="su-consent"> I'm happy for Rob Dunfey to email me about SIMOPS Radar alerts. I can ask to be removed at any time.</label>
+        <label class="tick"><input type="checkbox" id="su-consent"> I'm happy for the SIMOPS Radar team to email me about alerts and the occasional product update. I can ask to be removed at any time.</label>
         <p class="small">Your address is used for nothing else and shared with no one. <a href="privacy.html" target="_blank">Privacy note</a>.</p>
         <p id="su-msg" class="msg" role="status"></p>
         <div class="row">
@@ -200,6 +200,6 @@
     </form>
   </dialog>
 
-  <script type="module" src="js/app.js?v=2026-11-14d"></script>
+  <script type="module" src="js/app.js?v=2026-11-14e"></script>
 </body>
 </html>
