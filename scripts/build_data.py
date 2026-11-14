@@ -179,7 +179,7 @@ for a in R:
     cands = set(by_block.get(a["block"], []))
     for nb in NEIGH.get(a["block"], ()):
         cands |= set(by_block.get(nb, []))
-    for j in cands:
+    for j in sorted(cands):
         if j <= a["id"]:
             continue
         c = R[j]
@@ -195,6 +195,8 @@ for a in R:
             continue
         pairs.append([a["id"], c["id"], 1 if a["block"] == c["block"] else 0,
                       o_s.strftime("%Y-%m-%d"), o_e.strftime("%Y-%m-%d"), ov])
+
+pairs.sort()  # deterministic output, so a day with no PETS changes produces no commit
 
 # ---------------- write ----------------
 blk_used = set(A.block)
