@@ -102,7 +102,7 @@
         <a href="https://opendata-nstauthority.hub.arcgis.com/" target="_blank" rel="noopener">NSTA</a> blocks.
         Contains public sector information licensed under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener">Open Government Licence v3.0</a>.
         Dates are consent windows, not confirmed operations. Advisory only.
-        Built by Rob Dunfey · <a href="https://github.com/pushpingeo/simops-radar" target="_blank" rel="noopener">source</a>.
+        Built by Rob Dunfey · <a href="https://github.com/pushpingeo/simops-radar" target="_blank" rel="noopener">source</a> · <a href="privacy.html" target="_blank">privacy</a>.
       </footer>
     </section>
   </main>
@@ -132,14 +132,44 @@
     <form method="dialog">
       <h2>Your feedback</h2>
       <p id="fb-summary"></p>
-      <p class="small">Marks are kept in this browser only. Copy or email them to send them on. The link at the top includes your current rule settings.</p>
-      <textarea id="fb-text" readonly rows="12"></textarea>
+      <p class="small">Marks stay in this browser until you send them. The link at the top includes your current rule settings.</p>
+      <textarea id="fb-text" readonly rows="10"></textarea>
+      <label class="fld">Anything else? (optional)<textarea id="fb-extra" rows="2"></textarea></label>
+      <label class="fld">Your email, if you'd like a reply (optional)<input id="fb-email-addr" type="email" autocomplete="email"></label>
+      <input id="fb-hp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="small">Send to Rob stores your marks, notes and (if given) your email on the SIMOPS Radar server. See the <a href="privacy.html" target="_blank">privacy note</a>.</p>
+      <p id="fb-msg" class="msg" role="status"></p>
       <div class="row">
         <button type="button" id="fb-clear" class="ghost">Clear all</button>
         <span class="grow"></span>
         <button type="button" id="fb-copy" class="ghost">Copy</button>
         <button type="button" id="fb-email" class="ghost">Email</button>
-        <button value="ok">Close</button>
+        <button type="button" id="fb-send">Send to Rob</button>
+        <button value="ok" class="ghost">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="signup">
+    <form method="dialog">
+      <h2>Email alerts</h2>
+      <div id="su-form">
+        <p>Alerts aren't switched on yet. Leave your work email and I'll let you know when they start for <b id="su-what"></b>, with the settings you have now.</p>
+        <label class="fld">Work email<input id="su-email" type="email" autocomplete="email" required></label>
+        <input id="su-hp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="tick"><input type="checkbox" id="su-consent"> I'm happy for Rob Dunfey to email me about SIMOPS Radar alerts. I can ask to be removed at any time.</label>
+        <p class="small">Your address is used for nothing else and shared with no one. <a href="privacy.html" target="_blank">Privacy note</a>.</p>
+        <p id="su-msg" class="msg" role="status"></p>
+        <div class="row">
+          <button type="button" id="su-remove" class="ghost" title="Remove this address from the list">Remove me</button>
+          <span class="grow"></span>
+          <button value="cancel" class="ghost">Cancel</button>
+          <button type="button" id="su-send">Sign up</button>
+        </div>
+      </div>
+      <div id="su-done" hidden>
+        <p id="su-done-text"></p>
+        <div class="row"><button value="ok">Close</button></div>
       </div>
     </form>
   </dialog>

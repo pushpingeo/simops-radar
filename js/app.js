@@ -233,6 +233,9 @@ function buildControls() {
     catch { $("#fb-text").select(); document.execCommand("copy"); $("#fb-copy").textContent = "Copied"; }
     setTimeout(() => $("#fb-copy").textContent = "Copy", 1500);
   };
+  $("#fb-send").onclick = sendFeedback;
+  $("#su-send").onclick = () => submitSignup(false);
+  $("#su-remove").onclick = () => submitSignup(true);
   $("#fb-email").onclick = () => { location.href = `mailto:?subject=${encodeURIComponent("SIMOPS Radar feedback")}&body=${encodeURIComponent($("#fb-text").value)}`; };
   $("#fb-clear").onclick = () => { if (confirm("Clear all your marks on this device?")) { FB = {}; saveFeedback(); renderList(); openFeedback(); } };
   saveFeedback();
@@ -295,7 +298,10 @@ function renderSummary() {
     ? `<span class="big">${nNew}</span> flagged ${nNew === 1 ? "clash involves" : "clashes involve"} recent applications ${who}`
     : `<span class="big">${n}</span> flagged ${n === 1 ? "clash" : "clashes"} in ${state.year} ${who}`) +
     `<div class="sub">${state.preset === "custom" ? "Custom rules" : state.preset[0].toUpperCase() + state.preset.slice(1) + " setting"} ·
-    about ${pYear} a year over ${fy[0]}–${fy.at(-1)}</div><div class="sub fresh">${newLine}</div>`;
+    about ${pYear} a year over ${fy[0]}–${fy.at(-1)}</div><div class="sub fresh">${newLine}</div>` +
+    (INVITED && state.op !== "all" ? `<div class="sub"><button id="alert-btn" class="linkish">Email me when alerts start for ${esc(state.op)}</button></div>` : "");
+  const ab = $("#alert-btn");
+  if (ab) ab.onclick = openSignup;
   const t = $("#new-toggle");
   if (t) t.onclick = () => { state.newOnly = !state.newOnly; state.showN = 40; renderSummary(); renderYears(); renderList(); };
 }
@@ -433,6 +439,51 @@ function scoreDetails(p) {
     <tr class="tot"><td>Score</td><td>= ${p.score.toFixed(3)}</td></tr></table></details>`;
 }
 
+// ---------------------------------------------------------------- server: voluntary sign-ups and feedback
+const API = location.hostname === "localhost" ? "http://localhost:8787" : "https://api.simopsradar.com";
+let INVITED = false;
+try {
+  if (new URLSearchParams(location.search).has("invite")) localStorage.setItem("simops-radar-invite", "1");
+  INVITED = localStorage.getItem("simops-radar-invite") === "1";
+} catch { INVITED = new URLSearchParams(location.search).has("invite"); }
+
+async function post(path, body) {
+  try {
+    const r = await fetch(API + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const j = await r.json().catch(() => ({}));
+    return r.ok && j.ok ? { ok: true } : { ok: false, error: j.error || `Something went wrong (${r.status}).` };
+  } catch { return { ok: false, error: "Couldn't reach the server. Please try again later." }; }
+}
+const WATCH_TEXT = { any: "", seismic: " seismic surveys", site: " site surveys", notice: " survey notices", vsp: " VSP", rig: " rigs", vessel: " vessels", subsea: " pipeline works" };
+function openSignup() {
+  $("#su-what").textContent = `${state.op}${WATCH_TEXT[state.watch] || ""}`;
+  $("#su-msg").textContent = ""; $("#su-msg").className = "msg";
+  $("#su-form").hidden = false; $("#su-done").hidden = true;
+  $("#signup").showModal();
+}
+async function submitSignup(remove) {
+  const email = $("#su-email").value.trim(), msg = $("#su-msg");
+  if (!email) { msg.textContent = "Please enter your email address."; msg.className = "msg err"; return; }
+  if (!remove && !$("#su-consent").checked) { msg.textContent = "Please tick the box to agree."; msg.className = "msg err"; return; }
+  msg.textContent = "Sending…"; msg.className = "msg";
+  const res = remove
+    ? await post("/remove", { email, website: $("#su-hp").value })
+    : await post("/signup", { email, consent: true, operator: state.op, watching: state.watch, settings: location.href, website: $("#su-hp").value });
+  if (!res.ok) { msg.textContent = res.error; msg.className = "msg err"; return; }
+  $("#su-form").hidden = true; $("#su-done").hidden = false;
+  $("#su-done-text").textContent = remove
+    ? "Done. If that address was on the list, it has been removed."
+    : `Thanks. You'll hear from me when alerts start for ${$("#su-what").textContent}. Nothing else.`;
+}
+async function sendFeedback() {
+  const msg = $("#fb-msg"), email = $("#fb-email-addr").value.trim();
+  if (!Object.keys(FB).length && !$("#fb-extra").value.trim()) { msg.textContent = "Mark an alert or write a note first."; msg.className = "msg err"; return; }
+  msg.textContent = "Sending…"; msg.className = "msg";
+  const extra = $("#fb-extra").value.trim();
+  const res = await post("/feedback", { text: (extra ? `General note: ${extra}\n\n` : "") + feedbackText(), email, website: $("#fb-hp").value });
+  msg.textContent = res.ok ? "Sent. Thank you." : res.error; msg.className = res.ok ? "msg ok" : "msg err";
+}
+
 // ---------------------------------------------------------------- feedback (kept in this browser only)
 const FB_KEY = "simops-radar-feedback";
 let FB = {};
@@ -469,6 +520,7 @@ function openFeedback() {
   const counts = Object.keys(V_LABEL).map(v => `${Object.values(FB).filter(f => f.v === v).length} ${V_LABEL[v].toLowerCase()}`).join(", ");
   $("#fb-summary").textContent = n ? `${n} alert${n > 1 ? "s" : ""} marked: ${counts}.` : "Nothing marked yet. Use the Real / Not real / Unsure buttons on each alert.";
   $("#fb-text").value = feedbackText();
+  $("#fb-msg").textContent = "";
   $("#fb-dialog").showModal();
 }
 
