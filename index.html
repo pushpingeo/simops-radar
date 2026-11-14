@@ -26,6 +26,10 @@
       <span>Operator</span>
       <select id="op"></select>
     </label>
+    <label class="field" id="watch-field" hidden>
+      <span>Watching</span>
+      <select id="watch" title="Only show clashes where this company's side is this kind of activity"></select>
+    </label>
     <div class="field">
       <span>Sensitivity</span>
       <div class="seg" id="preset" role="radiogroup">
@@ -66,9 +70,8 @@
           <label class="sl">Only show alerts scoring at least <output id="o-minscore"></output><input type="range" id="r-minscore" min="0" max="0.5" step="0.01"></label>
         </fieldset>
         <fieldset>
-          <legend>Whose activities</legend>
-          <label><input type="checkbox" id="r-internal"> Include clashes between my own activities</label>
-          <label>Only when my side is <select id="r-myside"><option value="any">any activity</option></select></label>
+          <legend>Same company</legend>
+          <label><input type="checkbox" id="r-internal"> Include clashes where both sides belong to the same company (e.g. Shell seismic vs a Shell vessel)</label>
         </fieldset>
       </div>
     </details>

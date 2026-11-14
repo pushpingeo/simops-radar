@@ -58,7 +58,7 @@ const KIND = { sv: "Seismic vs vessel", sr: "Seismic vs rig", ss: "Seismic vs se
 
 // A preset switches pairing-grid cells on (at their default importance) by family, and sets the sliders.
 const grid = families => Object.fromEntries(CELLS.map(ck => [ck, families.includes(typeKey(...ck.split("|"))) ? defaultLevel(ck) : 0]));
-const BASE = { near: "adj", notice: 30, buffer: 0, minScore: 0, internal: true, mySide: "any" };
+const BASE = { near: "adj", notice: 30, buffer: 0, minScore: 0, internal: true };
 const PRESETS = {
   quiet:  { ...BASE, m: grid(["sv", "sr", "ss", "sp", "sy"]), assumed: false, minOv: 7, maxWin: 200 },
   medium: { ...BASE, m: grid(["sv", "sr", "ss", "sp", "sy", "rr", "rv"]), assumed: true, minOv: 7, maxWin: 365 },
@@ -76,7 +76,7 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "
 
 
 const state = {
-  op: "all", preset: "quiet", rules: structuredClone(PRESETS.quiet),
+  op: "all", watch: "any", preset: "quiet", rules: structuredClone(PRESETS.quiet),
   year: 2026, date: Date.UTC(2026, 10, 13), sel: null, showN: 40, playing: null, newOnly: false,
 };
 
@@ -149,7 +149,8 @@ function passes(p, r = state.rules, op = state.op) {
   const ma = p.a.owners.includes(op), mb = p.b.owners.includes(op);
   if (!ma && !mb) return false;
   if (ma && mb && !r.internal) return false;
-  if (r.mySide !== "any" && !((ma && p.a.cls === r.mySide) || (mb && p.b.cls === r.mySide))) return false;
+  const w = state.watch;
+  if (w !== "any" && !((ma && p.a.cls === w) || (mb && p.b.cls === w))) return false;
   return true;
 }
 
@@ -196,8 +197,7 @@ function buildControls() {
   document.querySelectorAll('input[name="near"]').forEach(el => el.onchange = () => { state.rules.near = el.value; custom(); });
   $("#r-assumed").onchange = e => { state.rules.assumed = e.target.checked; custom(); };
   $("#r-internal").onchange = e => { state.rules.internal = e.target.checked; custom(); };
-  $("#r-myside").innerHTML += C.map(c => `<option value="${c}">${esc(CLS[c].short.toLowerCase())}</option>`).join("");
-  $("#r-myside").onchange = e => { state.rules.mySide = e.target.value; custom(); };
+  $("#watch").onchange = e => { state.watch = e.target.value; state.sel = null; state.showN = 40; update(); };
   // sliders update as you drag, at most once per frame
   const slider = (id, key, toRule = Number) => {
     let pending = false;
@@ -273,8 +273,10 @@ function syncControls() {
   $("#r-maxwin").value = r.maxWin >= MAXWIN_NONE ? 760 : r.maxWin;
   $("#r-minscore").value = r.minScore;
   $("#r-internal").checked = r.internal;
-  $("#r-myside").value = r.mySide;
-  $("#r-myside").disabled = state.op === "all";
+  const WATCH = { any: "everything", seismic: "seismic surveys", site: "site surveys", notice: "survey notices", vsp: "VSP", rig: "rigs", vessel: "vessels", subsea: "pipeline works" };
+  $("#watch-field").hidden = state.op === "all";
+  $("#watch").innerHTML = Object.entries(WATCH).map(([k, t]) => `<option value="${k}">${k === "any" ? "All their activity" : "Their " + t}</option>`).join("");
+  $("#watch").value = state.watch;
   sliderLabels();
   $("#lg-mine").hidden = state.op === "all";
 }
@@ -282,7 +284,7 @@ function syncControls() {
 // ---------------------------------------------------------------- UI: summary, years, timeline, list
 function renderSummary() {
   const n = current.filter(p => inYear(p, state.year)).length;
-  const who = state.op === "all" ? "across all operators" : `involving ${esc(state.op)}`;
+  const who = state.op === "all" ? "across all operators" : `involving ${esc(state.op)}${state.watch !== "any" ? ` ${{ seismic: "seismic surveys", site: "site surveys", notice: "survey notices", vsp: "VSP", rig: "rigs", vessel: "vessels", subsea: "pipeline works" }[state.watch]}` : ""}`;
   const fy = meta.fileYears;
   const pYear = (current.filter(p => p.os >= Date.UTC(fy[0], 0, 1) && p.os <= Date.UTC(fy.at(-1), 11, 31)).length / fy.length).toFixed(1);
   const nNew = current.filter(p => p.isNew).length;
@@ -577,18 +579,22 @@ function example() {
 // ---------------------------------------------------------------- state in the URL
 function saveHash() {
   const h = new URLSearchParams({ op: state.op, p: state.preset, d: iso(state.date) });
+  if (state.op !== "all" && state.watch !== "any") h.set("w", state.watch);
   if (state.preset === "custom") h.set("r", JSON.stringify({ ...state.rules, m: CELLS.map(ck => state.rules.m[ck] || 0).join("") }));
   history.replaceState(null, "", "#" + h.toString());
 }
 function readHash() {
   const h = new URLSearchParams(location.hash.slice(1));
   if (h.get("op") && (h.get("op") === "all" || meta.operators.some(([n]) => n === h.get("op")))) state.op = h.get("op");
+  if (CLS[h.get("w")]) state.watch = h.get("w");
   const p = h.get("p");
   if (PRESETS[p]) { state.preset = p; state.rules = structuredClone(PRESETS[p]); }
   if (p === "custom") {
     try {
       const r = JSON.parse(h.get("r"));
       const m = typeof r.m === "string" ? Object.fromEntries(CELLS.map((ck, i) => [ck, Math.min(5, +r.m[i] || 0)])) : PRESETS.quiet.m;
+      if (CLS[r.mySide] && !CLS[h.get("w")]) state.watch = r.mySide;
+      delete r.mySide;
       state.rules = { ...structuredClone(PRESETS.quiet), ...r, m };
       state.preset = "custom";
     } catch { /* keep default */ }
