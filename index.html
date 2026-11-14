@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="css/style.css?v=2026-11-14e">
+  <link rel="stylesheet" href="css/style.css?v=2026-11-14f">
   <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.1/dist/maplibre-gl.js"></script>
 </head>
 <body>
@@ -150,7 +150,7 @@
       <p class="small">Hover over a reference on an alert to see what it is. Rejected versions are ignored (the previous version stands), and consents that were surrendered or revoked are left out. Consents with no decision yet are marked.</p>
       <p class="small">Limits: locations are licence blocks, not exact positions. Dates are consent windows, usually wider than the actual work. Survey notices have no end date, so a length is assumed (30 days unless you change it).</p>
       <p class="small">Sources: <a href="https://assets.publishing.service.gov.uk/media/5a748879e5274a7f9c586bfc/PETS_-_Industry_User_Guidance_v1_0.pdf" target="_blank" rel="noopener">PETS user guidance</a>, <a href="https://assets.publishing.service.gov.uk/media/67cac950a175f08d198d80b2/2024-04-18-opred-geological-survey-notifications.pdf" target="_blank" rel="noopener">OPRED survey notification note (2024)</a>.</p>
-      <div class="row"><button value="ok">Close</button></div>
+      <div class="row"><button value="ok" formnovalidate>Close</button></div>
     </form>
   </dialog>
 
@@ -171,7 +171,7 @@
         <button type="button" id="fb-copy" class="ghost">Copy</button>
         <button type="button" id="fb-email" class="ghost">Email</button>
         <button type="button" id="fb-send">Send</button>
-        <button value="ok" class="ghost">Close</button>
+        <button value="ok" class="ghost" formnovalidate>Close</button>
       </div>
     </form>
   </dialog>
@@ -181,7 +181,7 @@
       <h2>Email alerts</h2>
       <div id="su-form">
         <p>Alerts aren't switched on yet. Leave your work email and we'll let you know when they start for <b id="su-what"></b>, with the settings you have now.</p>
-        <label class="fld">Work email<input id="su-email" type="email" autocomplete="email" required></label>
+        <label class="fld">Work email<input id="su-email" type="email" autocomplete="email"></label>
         <input id="su-hp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <label class="tick"><input type="checkbox" id="su-consent"> I'm happy for the SIMOPS Radar team to email me about alerts and the occasional product update. I can ask to be removed at any time.</label>
         <p class="small">Your address is used for nothing else and shared with no one. <a href="privacy.html" target="_blank">Privacy note</a>.</p>
@@ -189,17 +189,17 @@
         <div class="row">
           <button type="button" id="su-remove" class="ghost" title="Remove this address from the list">Remove me</button>
           <span class="grow"></span>
-          <button value="cancel" class="ghost">Cancel</button>
+          <button value="cancel" class="ghost" formnovalidate>Cancel</button>
           <button type="button" id="su-send">Sign up</button>
         </div>
       </div>
       <div id="su-done" hidden>
         <p id="su-done-text"></p>
-        <div class="row"><button value="ok">Close</button></div>
+        <div class="row"><button value="ok" formnovalidate>Close</button></div>
       </div>
     </form>
   </dialog>
 
-  <script type="module" src="js/app.js?v=2026-11-14e"></script>
+  <script type="module" src="js/app.js?v=2026-11-14f"></script>
 </body>
 </html>
