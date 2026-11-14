@@ -38,7 +38,8 @@ function typeKey(a, b) {
 
 // Activity types along both sides of the pairing grid
 const C = ["seismic", "site", "notice", "vsp", "rig", "vessel", "subsea"];
-const C_SHORT = { seismic: "Seismic", site: "Site svy", notice: "Notice", vsp: "VSP", rig: "Rig", vessel: "Vessel", subsea: "Pipeline" };
+const C_SHORT = { seismic: "Seismic", site: "Site", notice: "Notice", vsp: "VSP", rig: "Rig", vessel: "Vessel", subsea: "Pipeline" };
+const C_HELP = { seismic: "Seismic survey (3D, 4D, ocean-bottom)", site: "Site survey (2D high-res, sub-bottom profilers, shallow drilling)", notice: "Survey notice: light survey (echo sounder, sonar, visual) with no end date", vsp: "VSP: borehole seismic shot from a rig", rig: "Drilling or intervention rig", vessel: "Intervention or dive vessel", subsea: "Pipeline or subsea works" };
 const CELLS = [];
 C.forEach((x, i) => C.slice(i).forEach(y => CELLS.push([x, y].sort().join("|"))));
 const defaultLevel = ck => Math.max(1, Math.round((W[ck] ?? 0.1) * 5));  // importance 1-5
@@ -76,11 +77,17 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "
 
 
 const state = {
-  op: "all", watch: "any", preset: "quiet", rules: structuredClone(PRESETS.quiet),
+  op: "all", watch: "any", preset: "quiet", rules: structuredClone(PRESETS.quiet), mode: "ahead",
   year: 2026, date: Date.UTC(2026, 10, 13), sel: null, showN: 40, playing: null, newOnly: false,
 };
 
 let A = [], P = [], meta = {}, map = null, mapReady = false, current = [], blocksGeo = null;
+let TODAY = Date.UTC(2026, 10, 14);  // the data date; set in load()
+const isAhead = p => p.oe >= TODAY, isPast = p => p.oe < TODAY;
+const pastYears = () => meta.years.filter(y => yStart(y) <= TODAY);
+const rel = days => days <= 1 ? (days === 1 ? "tomorrow" : "today") : days < 15 ? `in ${days} days` : days < 70 ? `in ${Math.round(days / 7)} weeks` : `in ${Math.round(days / 30.4)} months`;
+const sevLabel = s => s >= 0.35 ? "High" : s >= 0.2 ? "Medium" : "Low";
+const PRESET_TEXT = { quiet: "Quiet: only the most serious kinds", medium: "Medium: more kinds of clash", loud: "Loud: everything", custom: "Custom rules" };
 
 // ---------------------------------------------------------------- data
 async function load() {
@@ -94,6 +101,7 @@ async function load() {
   START = Date.UTC(meta.years[0], 0, 1);
   END = Date.UTC(meta.years.at(-1), 11, 31);
   meta.updatedMs = parse(meta.updated);
+  TODAY = meta.updatedMs;
   meta.newSince = meta.updatedMs - (NEW_DAYS - 1) * DAY;
   state.date = Math.min(Math.max(meta.updatedMs, START), END);
   state.year = new Date(state.date).getUTCFullYear();
@@ -173,16 +181,16 @@ function recompute() {
 // ---------------------------------------------------------------- UI: controls
 function buildControls() {
   const op = $("#op");
-  op.innerHTML = `<option value="all">All operators</option>` +
+  op.innerHTML = `<option value="all">All companies</option>` +
     meta.operators.filter(([, n]) => n >= 3).map(([name]) => `<option value="${esc(name)}">${esc(name)}</option>`).join("") +
-    `<optgroup label="Smaller operators">` +
+    `<optgroup label="Fewer than 3 applications">` +
     meta.operators.filter(([, n]) => n < 3).sort().map(([name]) => `<option value="${esc(name)}">${esc(name)}</option>`).join("") + `</optgroup>`;
   op.onchange = () => { state.op = op.value; state.sel = null; state.showN = 40; update(); };
 
   // pairing grid: activity types on both axes, importance 0-5 in each cell of the upper triangle
   const opt = v => `<option value="${v}">${v ? v : "–"}</option>`;
-  $("#grid").innerHTML = `<table class="grid"><tr><th></th>${C.map(c => `<th title="${esc(CLS[c].label)}"><span class="dot" style="--c:${CLS[c].color}"></span>${C_SHORT[c]}</th>`).join("")}</tr>` +
-    C.map((x, i) => `<tr><th title="${esc(CLS[x].label)}"><span class="dot" style="--c:${CLS[x].color}"></span>${C_SHORT[x]}</th>` + C.map((y, j) => {
+  $("#grid").innerHTML = `<table class="grid"><tr><th></th>${C.map(c => `<th title="${esc(C_HELP[c])}"><span class="dot" style="--c:${CLS[c].color}"></span>${C_SHORT[c]}</th>`).join("")}</tr>` +
+    C.map((x, i) => `<tr><th title="${esc(C_HELP[x])}"><span class="dot" style="--c:${CLS[x].color}"></span>${C_SHORT[x]}</th>` + C.map((y, j) => {
       if (j < i) return `<td></td>`;
       const ck = [x, y].sort().join("|");
       return `<td><select data-ck="${ck}" aria-label="${esc(C_SHORT[x] + " vs " + C_SHORT[y])}">${[0, 1, 2, 3, 4, 5].map(opt).join("")}</select></td>`;
@@ -243,8 +251,9 @@ function buildControls() {
 
   $("#legend-items").innerHTML = ["seismic", "vessel", "rig", "subsea", "site"].map(k =>
     `<div class="row"><span class="sw" style="--c:${CLS[k].color}"></span>${CLS[k].label}</div>`).join("") +
-    `<div class="row" id="lg-mine"><span class="sw mine" style="--c:#fff"></span>Selected operator's activity</div>` +
-    `<div class="row"><span class="sw line"></span>Flagged clash, active on this date</div>`;
+    `<div class="row" id="lg-mine"><span class="sw mine" style="--c:#fff"></span>Chosen company's work</div>` +
+    `<div class="row"><span class="sw line"></span>Clash on the map date</div>` +
+    `<div class="row"><span class="sw hotblk"></span>Block with a clash coming up</div>`;
 }
 
 function sliderLabels() {
@@ -285,51 +294,95 @@ function syncControls() {
 
 // ---------------------------------------------------------------- UI: summary, years, timeline, list
 function renderSummary() {
-  const n = current.filter(p => inYear(p, state.year)).length;
-  const who = state.op === "all" ? "across all operators" : `involving ${esc(state.op)}${state.watch !== "any" ? ` ${{ seismic: "seismic surveys", site: "site surveys", notice: "survey notices", vsp: "VSP", rig: "rigs", vessel: "vessels", subsea: "pipeline works" }[state.watch]}` : ""}`;
-  const fy = meta.fileYears;
-  const pYear = (current.filter(p => p.os >= Date.UTC(fy[0], 0, 1) && p.os <= Date.UTC(fy.at(-1), 11, 31)).length / fy.length).toFixed(1);
-  const nNew = current.filter(p => p.isNew).length;
+  const who = state.op === "all" ? "across all companies" : `for ${esc(state.op)}${esc(WATCH_TEXT[state.watch] || "")}`;
+  const ahead = current.filter(isAhead);
+  const nNew = ahead.filter(p => p.isNew).length;
   const tracking = parse(meta.trackingSince) > meta.newSince;
-  const newLine = tracking
-    ? `Data updated ${fmt(meta.updatedMs)}. Checked every morning; tracking new applications since ${fmt(parse(meta.trackingSince))}.`
-    : `Data updated ${fmt(meta.updatedMs)}. <button id="new-toggle" class="linkish${state.newOnly ? " on" : ""}" ${nNew ? "" : "disabled"}>${state.newOnly ? "Show all years" : `${nNew} ${nNew === 1 ? "alert involves" : "alerts involve"} applications new or changed since ${fmtShort(meta.newSince)}`}</button>`;
-  $("#summary").innerHTML = (state.newOnly
-    ? `<span class="big">${nNew}</span> flagged ${nNew === 1 ? "clash involves" : "clashes involve"} recent applications ${who}`
-    : `<span class="big">${n}</span> flagged ${n === 1 ? "clash" : "clashes"} in ${state.year} ${who}`) +
-    `<div class="sub">${state.preset === "custom" ? "Custom rules" : state.preset[0].toUpperCase() + state.preset.slice(1) + " setting"} ·
-    about ${pYear} a year over ${fy[0]}–${fy.at(-1)}</div><div class="sub fresh">${newLine}</div>` +
-    (INVITED && state.op !== "all" ? `<div class="sub"><button id="alert-btn" class="linkish">Email me when alerts start for ${esc(state.op)}</button></div>` : "");
+  let html;
+  if (state.mode === "ahead") {
+    const n = state.newOnly ? nNew : ahead.length;
+    const now = ahead.filter(p => p.os <= TODAY).length;
+    const next = ahead.filter(p => p.os > TODAY).sort((a, b) => a.os - b.os)[0];
+    const lines = [];
+    if (now) lines.push(`${now} happening now`);
+    if (next) lines.push(`next starts ${rel(Math.round((next.os - TODAY) / DAY))} (${fmtShort(next.os)})`);
+    html = `<span class="big">${n}</span> ${state.newOnly ? `${n === 1 ? "clash involves" : "clashes involve"} new applications` : `${n === 1 ? "clash" : "clashes"} coming up`} ${who}` +
+      (lines.length ? `<div class="sub">${lines.join(" · ")}</div>` : "") +
+      `<div class="sub">${PRESET_TEXT[state.preset]}${!tracking && nNew ? ` · <button id="new-toggle" class="linkish${state.newOnly ? " on" : ""}">${state.newOnly ? "show all coming up" : `${nNew} involve${nNew === 1 ? "s" : ""} applications new since ${fmtShort(meta.newSince)}`}</button>` : ""}</div>`;
+  } else {
+    const n = current.filter(p => isPast(p) && inYear(p, state.year)).length;
+    const fy = meta.fileYears.filter(y => yStart(y) <= TODAY);
+    const pYear = Math.round(current.filter(p => isPast(p) && p.os >= yStart(fy[0])).length / Math.max(1, (TODAY - yStart(fy[0])) / (365.25 * DAY)));
+    html = `<span class="big">${n}</span> ${n === 1 ? "clash" : "clashes"} in ${state.year} ${who}` +
+      `<div class="sub">${PRESET_TEXT[state.preset]} · about ${pYear} a year since ${fy[0]}</div>` +
+      `<div class="sub ask">Looking back is how the rules get checked. If you know what happened, mark each clash 👍 or 👎.</div>`;
+  }
+  if (INVITED && state.op !== "all") html += `<div class="sub"><button id="alert-btn" class="linkish">✉ Email me when alerts start for ${esc(state.op)}</button></div>`;
+  $("#summary").innerHTML = html;
   const ab = $("#alert-btn");
   if (ab) ab.onclick = openSignup;
   const t = $("#new-toggle");
-  if (t) t.onclick = () => { state.newOnly = !state.newOnly; state.showN = 40; renderSummary(); renderYears(); renderList(); };
+  if (t) t.onclick = () => { state.newOnly = !state.newOnly; state.showN = 40; renderSummary(); renderList(); renderTimeline(); };
+}
+
+function setMode(m) {
+  if (state.playing) togglePlay();
+  state.mode = m; state.sel = null; state.showN = 40; state.newOnly = false;
+  let d = state.date;
+  if (m === "ahead") d = TODAY;
+  else if (d >= TODAY) d = TODAY - DAY;
+  state.date = d; state.year = new Date(d).getUTCFullYear();
+  $("#date").value = Math.round((d - START) / DAY);
+  $("#date-label").textContent = fmt(d);
+  update();
 }
 
 function renderYears() {
-  $("#years").innerHTML = meta.years.map(y => {
-    const n = current.filter(p => inYear(p, y)).length;
-    return `<button data-y="${y}" aria-pressed="${y === state.year && !state.newOnly}"><b class="${n ? "" : "zero"}">${n}</b><small>${y}</small></button>`;
+  const nAhead = current.filter(isAhead).length;
+  document.querySelectorAll("#modes button").forEach(b => {
+    b.setAttribute("aria-selected", b.dataset.m === state.mode);
+    if (b.dataset.m === "ahead") b.querySelector("b").textContent = nAhead;
+  });
+  $("#modes").onclick = e => { const b = e.target.closest("button"); if (b && b.dataset.m !== state.mode) setMode(b.dataset.m); };
+  $("#years").hidden = state.mode !== "back";
+  if (state.mode !== "back") return;
+  $("#years").innerHTML = pastYears().map(y => {
+    const n = current.filter(p => isPast(p) && inYear(p, y)).length;
+    return `<button data-y="${y}" aria-pressed="${y === state.year}"><b class="${n ? "" : "zero"}">${n}</b><small>${y}</small></button>`;
   }).join("");
   $("#years").onclick = e => {
     const y = +e.target.closest("button")?.dataset.y;
     if (!y) return;
-    state.sel = null; state.showN = 40; state.newOnly = false;
+    state.sel = null; state.showN = 40;
     const d = new Date(state.date);
-    setDate(Date.UTC(y, d.getUTCMonth(), Math.min(d.getUTCDate(), 28)), false);
+    setDate(Math.min(Date.UTC(y, d.getUTCMonth(), Math.min(d.getUTCDate(), 28)), TODAY - DAY), false);
   };
+}
+
+function listItems() {
+  if (state.mode === "ahead") {
+    const it = current.filter(isAhead).filter(p => !state.newOnly || p.isNew);
+    return it.sort((a, b) => a.os - b.os || b.score - a.score);
+  }
+  return current.filter(p => isPast(p) && inYear(p, state.year));
+}
+function timeWindow() {
+  if (state.mode === "back") return [yStart(state.year), yEnd(state.year) + DAY];
+  const items = listItems();
+  const last = items.length ? Math.max(...items.map(p => p.oe)) : 0;
+  return [TODAY - 14 * DAY, Math.min(Math.max(TODAY + 183 * DAY, last + 7 * DAY), TODAY + 400 * DAY)];
 }
 
 const sevColor = s => s >= 0.35 ? "#e03131" : s >= 0.2 ? "#f08c00" : "#fab005";
 
 function renderTimeline() {
   const svg = $("#timeline");
-  const W_ = svg.clientWidth || 400, H = 86, padL = 4, padR = 4, axisH = 14;
-  const y0 = yStart(state.year), y1 = yEnd(state.year) + DAY;
+  const W_ = svg.clientWidth || 400, H = svg.clientHeight || 120, padL = 4, padR = 4, axisH = 14;
+  const [y0, y1] = timeWindow();
   const x = t => padL + (Math.min(Math.max(t, y0), y1) - y0) / (y1 - y0) * (W_ - padL - padR);
-  const items = current.filter(p => inYear(p, state.year)).sort((a, b) => a.os - b.os);
+  const items = listItems().filter(p => p.oe >= y0 && p.os < y1).sort((a, b) => a.os - b.os);
   const lanesEnd = [];
-  const laneH = Math.max(3, Math.min(9, (H - axisH - 4) / Math.max(1, Math.min(items.length, 12))));
+  const laneH = Math.max(4, Math.min(14, (H - axisH - 4) / Math.max(1, Math.min(items.length, 12))));
   const maxLanes = Math.floor((H - axisH - 4) / laneH);
   let bars = "";
   for (const p of items) {
@@ -338,17 +391,21 @@ function renderTimeline() {
     lanesEnd[lane] = p.oe + 2 * DAY;
     if (lane >= maxLanes) continue;
     const y = 2 + lane * laneH;
-    bars += `<rect class="bar${p.i === state.sel ? " sel" : ""}" data-i="${p.i}" x="${x(p.os)}" y="${y}" width="${Math.max(2, x(p.oe + DAY) - x(p.os))}" height="${laneH - 1.5}" rx="1.5" fill="${sevColor(p.score)}"><title>${esc(KIND[p.type])}: ${fmtRange(p.os, p.oe)}</title></rect>`;
+    bars += `<rect class="bar${p.i === state.sel ? " sel" : ""}" data-i="${p.i}" x="${x(p.os)}" y="${y}" width="${Math.max(2, x(p.oe + DAY) - x(p.os))}" height="${laneH - 1.5}" rx="1.5" fill="${sevColor(p.score)}"><title>${esc(KIND[p.type])} (${sevLabel(p.score).toLowerCase()}): ${fmtRange(p.os, p.oe)}</title></rect>`;
   }
   let axis = "";
-  for (let m = 0; m < 12; m++) {
-    const t = Date.UTC(state.year, m, 1), xx = x(t);
-    axis += `<line x1="${xx}" x2="${xx}" y1="${H - axisH}" y2="${H - axisH + 3}"/><text x="${xx + 2}" y="${H - 2}">${"JFMAMJJASOND"[m]}</text>`;
+  const d0 = new Date(y0), span = (y1 - y0) / DAY;
+  for (let t = Date.UTC(d0.getUTCFullYear(), d0.getUTCMonth() + 1, 1); t < y1; t = Date.UTC(new Date(t).getUTCFullYear(), new Date(t).getUTCMonth() + 1, 1)) {
+    const dt = new Date(t), m = dt.getUTCMonth(), xx = x(t);
+    const label = m === 0 && state.mode === "ahead" ? String(dt.getUTCFullYear()) : span < 260 && W_ > 420 ? dt.toLocaleDateString("en-GB", { month: "short", timeZone: "UTC" }) : "JFMAMJJASOND"[m];
+    axis += `<line x1="${xx}" x2="${xx}" y1="${H - axisH}" y2="${H - axisH + 3}"/><text x="${xx + 2}" y="${H - 2}">${label}</text>`;
   }
-  const now = state.date >= y0 && state.date < y1 ? `<line class="now" x1="${x(state.date)}" x2="${x(state.date)}" y1="0" y2="${H - axisH}"/>` : "";
+  if (state.mode === "back") axis = `<line x1="${x(y0)}" x2="${x(y0)}" y1="${H - axisH}" y2="${H - axisH + 3}"/><text x="${x(y0) + 2}" y="${H - 2}">J</text>` + axis;
+  const today = state.mode === "ahead" ? `<line class="today" x1="${x(TODAY)}" x2="${x(TODAY)}" y1="0" y2="${H - axisH}"/><text class="today-t" x="${x(TODAY) + 3}" y="${H - axisH - 3}">today</text>` : "";
+  const now = state.date >= y0 && state.date < y1 && !(state.mode === "ahead" && state.date === TODAY) ? `<line class="now" x1="${x(state.date)}" x2="${x(state.date)}" y1="0" y2="${H - axisH}"/>` : "";
   svg.setAttribute("viewBox", `0 0 ${W_} ${H}`);
-  svg.innerHTML = `<g class="axis"><line x1="${padL}" x2="${W_ - padR}" y1="${H - axisH}" y2="${H - axisH}"/>${axis}</g>${bars}${now}` +
-    (items.length ? "" : `<text x="${W_ / 2}" y="${(H - axisH) / 2 + 4}" text-anchor="middle" style="font:12px var(--sans);fill:#868e96">Nothing flagged in ${state.year} with these rules</text>`);
+  svg.innerHTML = `<g class="axis"><line x1="${padL}" x2="${W_ - padR}" y1="${H - axisH}" y2="${H - axisH}"/>${axis}</g>${today}${bars}${now}` +
+    (items.length ? "" : `<text x="${W_ / 2}" y="${(H - axisH) / 2 + 4}" text-anchor="middle" style="font:12px var(--sans);fill:#868e96">${state.mode === "ahead" ? "Nothing coming up with these settings" : `Nothing flagged in ${state.year} with these settings`}</text>`);
   svg.onclick = e => { const i = e.target.dataset?.i; if (i != null) select(+i); };
 }
 
@@ -383,30 +440,32 @@ function actLine(a) {
 }
 
 function renderList() {
-  const items = state.newOnly ? current.filter(p => p.isNew) : current.filter(p => inYear(p, state.year));
+  const items = listItems();
   if (!items.length) {
-    $("#list").innerHTML = state.newOnly
-      ? `<div class="empty">No flagged clashes involve recent applications for this operator with these rules.</div>`
-      : `<div class="empty">Nothing flagged in ${state.year} for this operator with these rules. Try another year, or turn the sensitivity up.</div>`;
+    $("#list").innerHTML = state.mode === "ahead"
+      ? `<div class="empty">Nothing coming up with these settings. Try <b>Medium</b> or <b>Loud</b>, or <b>Look back</b> to see past clashes.</div>`
+      : `<div class="empty">Nothing flagged in ${state.year} with these settings. Try another year, or turn the sensitivity up.</div>`;
     return;
   }
   const shown = items.slice(0, state.showN);
   $("#list").innerHTML = shown.map(p => {
     const [mine, other] = orient(p);
-    const tags = state.op === "all" ? ["A", "B"] : p.shared ? ["Yours", "Also yours"] : ["Yours", "Other"];
+    const short = n => n.length > 18 ? n.split(/\s|\//)[0] : n;
+    const tags = state.op === "all" ? null : [short(state.op), p.shared ? short(state.op) : "Other"];
     const live = p.os <= state.date && p.oe >= state.date;
+    const months = Math.round(p.longest / 30.4);
     const chips = [
-      `<span class="chip ${p.same ? "hot" : ""}">${p.same ? `same block ${p.a.block}` : `neighbouring blocks ${mine.block} and ${other.block}`}</span>`,
+      `<span class="chip ${p.same ? "hot" : ""}">${p.same ? `same block ${p.a.block}` : `next-door blocks ${mine.block} and ${other.block}`}</span>`,
       p.ov > 0 ? `<span class="chip">overlap ${p.ov} days</span>` : `<span class="chip soft">near miss, ${p.gap} days apart</span>`,
-      p.nAssumed ? `<span class="chip soft">end date assumed</span>` : `<span class="chip">both dated</span>`,
-      p.longest > 150 ? `<span class="chip soft">long consent window (${p.longest} days)</span>` : "",
-      p.shared ? `<span class="chip">same operator</span>` : "",
+      p.nAssumed ? `<span class="chip soft" title="Survey notices have no end date, so one was assumed">end date guessed</span>` : `<span class="chip" title="Both consents give start and end dates">firm dates</span>`,
+      p.longest > 150 ? `<span class="chip soft" title="Long consent windows say little about when the work actually happens">consent covers ${months} months, timing vague</span>` : "",
+      p.shared ? `<span class="chip">same company</span>` : "",
       ...[mine, other].filter(a => a.isNew).map(a => `<span class="chip new">${a.newKind} ${fmtShort(parse(a.newDate))}: ${esc(a.refs[0].split("/").slice(0, 2).join("/"))}</span>`),
     ].join("");
     return `<div class="alert${p.i === state.sel ? " sel" : ""}${live ? " live" : ""}" data-i="${p.i}" style="--sev:${sevColor(p.score)}">
-      <div class="top"><span class="kind">${KIND[p.type]}</span><span class="score" title="Ranking score">${p.score.toFixed(2)}</span></div>
-      <div class="when">${p.ov > 0 ? fmtRange(p.os, p.oe) : `Gap ${fmtRange(p.os, p.oe)}`}${live ? " · active on the date shown" : ""}</div>
-      <div class="who"><span class="tag">${tags[0]}</span><span class="act">${actLine(mine)}</span><span class="tag">${tags[1]}</span><span class="act">${actLine(other)}</span></div>
+      <div class="top"><span class="kind">${KIND[p.type]}</span><span class="sev sev-${sevLabel(p.score).toLowerCase()}" title="Score ${p.score.toFixed(2)}. Open 'Why this rating' for how it's worked out.">${sevLabel(p.score)}</span></div>
+      <div class="when">${whenText(p, live)}</div>
+      <div class="who${tags ? "" : " notags"}">${tags ? `<span class="tag">${esc(tags[0])}</span>` : ""}<span class="act">${actLine(mine)}</span>${tags ? `<span class="tag">${esc(tags[1])}</span>` : ""}<span class="act">${actLine(other)}</span></div>
       <div class="why">${chips}</div>
       ${scoreDetails(p)}
       ${feedbackBar(p)}</div>`;
@@ -425,6 +484,15 @@ function renderList() {
   };
 }
 
+function whenText(p, live) {
+  const range = p.ov > 0 ? fmtRange(p.os, p.oe) : `gap ${fmtRange(p.os, p.oe)}`;
+  if (state.mode === "ahead") {
+    if (p.os <= TODAY) return `<b class="now-tag">Happening now</b> · until ${fmt(p.oe)}`;
+    return `<b>Starts ${rel(Math.round((p.os - TODAY) / DAY))}</b> · ${range}`;
+  }
+  return range + (live ? " · on the map date" : "");
+}
+
 function scoreDetails(p) {
   const f = p.f, x = v => v.toFixed(2);
   const rows = [
@@ -434,9 +502,9 @@ function scoreDetails(p) {
     [p.ov > 0 ? `Overlap ${p.ov} days (full credit from 30)` : `Near miss, ${p.gap} days apart (buffer ${state.rules.buffer})`, "", f.overlap],
     [`Longest consent window ${p.longest} days (vaguer when long)`, "", f.window],
   ];
-  return `<details class="calc"><summary>How it's scored</summary><table>${rows.map(([t, n, v]) =>
+  return `<details class="calc"><summary>Why ${sevLabel(p.score).toLowerCase()}?</summary><table>${rows.map(([t, n, v]) =>
     `<tr><td>${t}${n ? ` <small>${n}</small>` : ""}</td><td>× ${x(v)}</td></tr>`).join("")}
-    <tr class="tot"><td>Score</td><td>= ${p.score.toFixed(3)}</td></tr></table></details>`;
+    <tr class="tot"><td>Score (High from 0.35, Medium from 0.20)</td><td>= ${p.score.toFixed(3)}</td></tr></table></details>`;
 }
 
 // ---------------------------------------------------------------- server: voluntary sign-ups and feedback
@@ -491,14 +559,18 @@ try { FB = JSON.parse(localStorage.getItem(FB_KEY) || "{}") || {}; } catch { FB 
 function saveFeedback() {
   try { localStorage.setItem(FB_KEY, JSON.stringify(FB)); } catch { /* storage unavailable: kept for this visit only */ }
   const n = Object.keys(FB).length;
-  $("#fb-btn").textContent = n ? `Your feedback (${n})` : "Your feedback";
+  $("#fb-btn").textContent = n ? `Send feedback (${n})` : "Send feedback";
 }
-const V_LABEL = { real: "Real", not: "Not real", unsure: "Unsure" };
+const V_LABEL = {
+  ahead: { real: ["👍", "Useful"], not: ["👎", "Not useful"] },
+  back: { real: ["👍", "Real clash"], not: ["👎", "Not a clash"], unsure: ["🤷", "Not sure"] },
+};
+const vText = f => (V_LABEL[f.mode || "back"][f.v] || ["", f.v])[1];
 function feedbackBar(p) {
-  const f = FB[p.key];
-  return `<div class="fb"><span>Worth a call?</span>${Object.entries(V_LABEL).map(([v, t]) =>
-    `<button type="button" data-v="${v}" class="${f?.v === v ? "on " + v : ""}">${t}</button>`).join("")}
-    ${f ? `<input class="fb-note" type="text" placeholder="Why? (optional)" value="${esc(f.note || "")}" aria-label="Note">` : ""}</div>`;
+  const f = FB[p.key], mode = state.mode;
+  return `<div class="fb"><span>${mode === "ahead" ? "Useful heads-up?" : "Did this really clash?"}</span>${Object.entries(V_LABEL[mode]).map(([v, [icon, t]]) =>
+    `<button type="button" data-v="${v}" class="${f?.v === v && (f.mode || "back") === mode ? "on " + v : ""}" title="${t}" aria-label="${t}">${icon} <span>${t}</span></button>`).join("")}
+    ${f ? `<input class="fb-note" type="text" placeholder="${mode === "ahead" ? "Anything to add? (optional)" : "What happened? (optional)"}" value="${esc(f.note || "")}" aria-label="Note">` : ""}</div>`;
 }
 function describe(p) {
   const [m, o] = orient(p);
@@ -506,19 +578,22 @@ function describe(p) {
   return `${KIND[p.type]}, ${p.ov > 0 ? `overlap ${p.ov} days from ${iso(p.os)}` : `${p.gap} days apart`}, score ${p.score.toFixed(2)}\n   ${one(m)}\n   ${one(o)}`;
 }
 function setVerdict(p, v) {
-  if (FB[p.key]?.v === v) delete FB[p.key];
-  else FB[p.key] = { v, note: FB[p.key]?.note || "", at: iso(Date.now()), what: describe(p) };
+  const mode = state.mode;
+  if (FB[p.key]?.v === v && (FB[p.key].mode || "back") === mode) delete FB[p.key];
+  else FB[p.key] = { v, mode, note: FB[p.key]?.note || "", at: iso(Date.now()), what: describe(p) };
   saveFeedback(); renderList();
 }
 function feedbackText() {
   const items = Object.entries(FB).sort((a, b) => a[1].v.localeCompare(b[1].v));
   return `SIMOPS Radar feedback, ${fmt(Date.now())}\nSettings when sent: ${location.href}\n\n` +
-    (items.length ? items.map(([k, f]) => `[${V_LABEL[f.v].toUpperCase()}] ${f.what}${f.note ? `\n   Note: ${f.note}` : ""}`).join("\n\n") : "(nothing marked yet)") + "\n";
+    (items.length ? items.map(([k, f]) => `[${vText(f).toUpperCase()}${f.mode === "ahead" ? ", coming up" : ""}] ${f.what}${f.note ? `\n   Note: ${f.note}` : ""}`).join("\n\n") : "(nothing marked yet)") + "\n";
 }
 function openFeedback() {
   const n = Object.keys(FB).length;
-  const counts = Object.keys(V_LABEL).map(v => `${Object.values(FB).filter(f => f.v === v).length} ${V_LABEL[v].toLowerCase()}`).join(", ");
-  $("#fb-summary").textContent = n ? `${n} alert${n > 1 ? "s" : ""} marked: ${counts}.` : "Nothing marked yet. Use the Real / Not real / Unsure buttons on each alert.";
+  const tally = {};
+  for (const f of Object.values(FB)) { const t = vText(f).toLowerCase(); tally[t] = (tally[t] || 0) + 1; }
+  const counts = Object.entries(tally).map(([t, c]) => `${c} ${t}`).join(", ");
+  $("#fb-summary").textContent = n ? `${n} clash${n > 1 ? "es" : ""} marked: ${counts}.` : "Nothing marked yet. Use the 👍 and 👎 buttons on each clash.";
   $("#fb-text").value = feedbackText();
   $("#fb-msg").textContent = "";
   $("#fb-dialog").showModal();
@@ -584,6 +659,7 @@ function renderMap() {
   map.getSource("links").setData({ type: "FeatureCollection", features: linkPairs.filter(p => p.a._xy && p.b._xy).map(p => ({
     type: "Feature", geometry: { type: "LineString", coordinates: [p.a._xy, p.b._xy] }, properties: { sel: p === sel } })) });
   const blocksHot = new Map();
+  if (state.mode === "ahead") for (const p of listItems()) for (const k of [p.a.block, p.b.block]) blocksHot.set(k, false);
   for (const p of linkPairs) for (const k of [p.a.block, p.b.block]) blocksHot.set(k, blocksHot.get(k) || p === sel);
   const feats2 = blocksGeo.features.filter(f => blocksHot.has(f.properties.key)).map(f => ({ ...f, properties: { ...f.properties, sel: blocksHot.get(f.properties.key) } }));
   map.getSource("hot").setData({ type: "FeatureCollection", features: feats2 });
@@ -615,7 +691,9 @@ function setDate(ms, fromSlider) {
   state.date = ms; state.year = y;
   if (!fromSlider) $("#date").value = Math.round((ms - START) / DAY);
   $("#date-label").textContent = fmt(ms);
-  if (yearChanged) { state.showN = 40; renderSummary(); renderYears(); renderList(); }
+  if (state.mode === "back" && ms >= TODAY) { state.date = TODAY; setMode("ahead"); return; }
+  if (state.mode === "ahead" && ms < TODAY - 14 * DAY) { setMode("back"); return; }
+  if (yearChanged && state.mode === "back") { state.showN = 40; renderSummary(); renderYears(); renderList(); }
   else document.querySelectorAll(".alert").forEach(el => { const p = P[+el.dataset.i]; el.classList.toggle("live", p.os <= ms && p.oe >= ms); });
   renderTimeline();
   renderMap();
@@ -644,7 +722,9 @@ function select(i) {
 
 // ---------------------------------------------------------------- state in the URL
 function saveHash() {
-  const h = new URLSearchParams({ op: state.op, p: state.preset, d: iso(state.date) });
+  const h = new URLSearchParams({ op: state.op, p: state.preset });
+  if (state.mode === "back") { h.set("m", "back"); h.set("d", iso(state.date)); }
+  else if (state.date !== TODAY) h.set("d", iso(state.date));
   if (state.op !== "all" && state.watch !== "any") h.set("w", state.watch);
   if (state.preset === "custom") h.set("r", JSON.stringify({ ...state.rules, m: CELLS.map(ck => state.rules.m[ck] || 0).join("") }));
   history.replaceState(null, "", "#" + h.toString());
@@ -667,6 +747,9 @@ function readHash() {
   }
   const d = parse(h.get("d") || "");
   if (!isNaN(d)) { state.date = Math.min(Math.max(d, START), END); state.year = new Date(state.date).getUTCFullYear(); }
+  // old links (e.g. the Gannet example) carry a past date and no mode: open them in Look back
+  state.mode = h.get("m") === "back" || (!h.get("m") && !isNaN(d) && d < TODAY - 14 * DAY) ? "back" : "ahead";
+  if (state.mode === "back" && state.date >= TODAY) { state.date = TODAY - DAY; state.year = new Date(state.date).getUTCFullYear(); }
 }
 
 // ---------------------------------------------------------------- go
@@ -677,6 +760,8 @@ function update() {
 
 (async function main() {
   await load();
+  try { if (!localStorage.getItem("simops-radar-hint")) $("#hint").hidden = false; } catch { $("#hint").hidden = false; }
+  $("#hint button").onclick = () => { $("#hint").hidden = true; try { localStorage.setItem("simops-radar-hint", "1"); } catch { /* fine */ } };
   buildControls();
   $("#live-pill span").textContent = `Updated ${fmtShort(meta.updatedMs)} · ${meta.years[0]} onwards`;
   $("#live-pill").title = `Built from OPRED's public consent data, checked every morning. Last changed ${fmt(meta.updatedMs)}.`;

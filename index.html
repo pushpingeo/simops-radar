@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.1/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="css/style.css?v=2026-11-14b">
+  <link rel="stylesheet" href="css/style.css?v=2026-11-14c">
   <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.1/dist/maplibre-gl.js"></script>
 </head>
 <body>
@@ -40,7 +40,7 @@
 
   <section class="toolbar">
     <label class="field">
-      <span>Operator</span>
+      <span>Company</span>
       <select id="op"></select>
     </label>
     <label class="field" id="watch-field" hidden>
@@ -63,6 +63,7 @@
         <fieldset>
           <legend>Which pairings to flag, and how much each matters (– off, 1 low, 5 high)</legend>
           <div id="grid" class="grid-wrap"></div>
+          <p class="hint key">Site = site survey (2D high-res, profilers). Notice = light survey with no end date (echo sounder, sonar). VSP = borehole seismic from a rig. Pipeline = pipeline or subsea works. Hover over a name for more.</p>
           <div class="quick">
             <button type="button" class="mini" data-g="seismic">Seismic pairings only</button>
             <button type="button" class="mini" data-g="all">All on</button>
@@ -84,7 +85,7 @@
         </fieldset>
         <fieldset>
           <legend>Ranking</legend>
-          <label class="sl">Only show alerts scoring at least <output id="o-minscore"></output><input type="range" id="r-minscore" min="0" max="0.5" step="0.01"></label>
+          <label class="sl">Only show clashes scoring at least <output id="o-minscore"></output><input type="range" id="r-minscore" min="0" max="0.5" step="0.01"></label>
         </fieldset>
         <fieldset>
           <legend>Same company</legend>
@@ -92,7 +93,7 @@
         </fieldset>
       </div>
     </details>
-    <button id="fb-btn" class="example fbtn" title="Your Real / Not real marks, to copy or email">Your feedback</button>
+    <button id="fb-btn" class="example fbtn" title="Send your 👍 / 👎 marks and notes">Send feedback</button>
   </section>
 
   <main>
@@ -105,14 +106,19 @@
       <div class="timebar">
         <button id="play" class="icon-btn" aria-label="Play">▶</button>
         <input id="date" type="range" min="0" max="100" step="1" aria-label="Date">
-        <output id="date-label"></output>
+        <span class="map-date">Map shows <output id="date-label"></output></span>
       </div>
     </section>
 
     <section class="side">
+      <div class="hint-bar" id="hint" hidden><span>Pick a company to see clashes with its own work. Click a clash to see it on the map and timeline.</span><button type="button">Got it</button></div>
+      <div class="modes" id="modes" role="tablist">
+        <button type="button" role="tab" data-m="ahead">Coming up <b></b></button>
+        <button type="button" role="tab" data-m="back">Look back</button>
+      </div>
       <div class="summary" id="summary"></div>
-      <div class="years" id="years"></div>
-      <div class="timeline-wrap"><svg id="timeline" role="img" aria-label="Alerts on a timeline"></svg></div>
+      <div class="years" id="years" hidden></div>
+      <div class="timeline-wrap"><svg id="timeline" role="img" aria-label="Clashes on a timeline"></svg></div>
       <div class="list" id="list"></div>
       <footer>
         Data: OPRED <a href="https://itportal.energysecurity.gov.uk/eng/fox/beis/PETS_EXTERNAL_PUBLICATION/main" target="_blank" rel="noopener">PETS public application data</a> (checked daily, last changed <span id="built"></span>),
@@ -129,7 +135,8 @@
       <h2>What this is</h2>
       <p>When two offshore operations need the same patch of sea at the same time, one of them has to wait or work around the other. That usually means a costly vessel or rig standing by, a survey line given up, or a plan rearranged at short notice. Finding out weeks ahead turns that into a phone call between two companies.</p>
       <p>Every survey, rig move, well intervention and pipeline job on the UK shelf needs a consent from the regulator (OPRED), and the list is public. SIMOPS Radar reads that list every morning, finds activities in the same or a neighbouring block whose consent windows overlap, and ranks them by how likely they are to matter.</p>
-      <p>Pick an operator to see only clashes involving its work, and use Watching to narrow that to, say, its seismic surveys or rigs. Quiet shows the few worth a call. Rules lets you set what counts and shows how each score is made up.</p>
+      <p><b>Coming up</b> lists clashes that haven't finished yet, soonest first. <b>Look back</b> shows past years, which is how the rules get checked: if you know what happened, a quick 👍 or 👎 helps.</p>
+      <p>Pick a company to see only clashes involving its work, and use Watching to narrow that to, say, its seismic surveys or rigs. Quiet shows the few worth a call. Rules lets you set what counts, and each clash shows why it was rated High, Medium or Low.</p>
       <h3 id="about-ai">How AI was used</h3>
       <p class="small">I designed SIMOPS Radar and built it with an AI assistant (Claude) doing much of the coding, data cleaning and testing. The alerts themselves don't come from AI: they come from fixed rules you can see and change under Rules, and every score can be traced back to the public consent data.</p>
       <h3>What the consents mean</h3>
@@ -193,6 +200,6 @@
     </form>
   </dialog>
 
-  <script type="module" src="js/app.js?v=2026-11-14b"></script>
+  <script type="module" src="js/app.js?v=2026-11-14c"></script>
 </body>
 </html>
