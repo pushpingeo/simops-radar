@@ -30,16 +30,17 @@ const TYPES = [
   { key: "sr", label: "Seismic vs rig" },
   { key: "ss", label: "Seismic vs seismic" },
   { key: "sp", label: "Seismic vs pipeline works" },
+  { key: "sy", label: "Seismic vs site survey (incl. survey notices)" },
   { key: "rr", label: "Rig vs rig" },
   { key: "rv", label: "Rigs, vessels and pipeline works together" },
-  { key: "sx", label: "Anything involving site surveys or survey notices" },
+  { key: "sx", label: "Other pairs involving site surveys, notices or VSP" },
 ];
 const TYPE_LABEL = Object.fromEntries(TYPES.map(t => [t.key, t.label]));
-const KIND = { sv: "Seismic vs vessel", sr: "Seismic vs rig", ss: "Seismic vs seismic", sp: "Seismic vs pipeline works", rr: "Rig vs rig", rv: "Rig, vessel or pipeline works", sx: "Survey overlap" };
+const KIND = { sv: "Seismic vs vessel", sr: "Seismic vs rig", ss: "Seismic vs seismic", sp: "Seismic vs pipeline works", sy: "Seismic vs site survey", rr: "Rig vs rig", rv: "Rig, vessel or pipeline works", sx: "Survey overlap" };
 
 const PRESETS = {
-  quiet:  { types: ["sv", "sr", "ss", "sp"], near: "adj", assumed: false, minOv: 7, maxWin: 200, internal: true },
-  medium: { types: ["sv", "sr", "ss", "sp", "rr", "rv"], near: "adj", assumed: true, minOv: 7, maxWin: 365, internal: true },
+  quiet:  { types: ["sv", "sr", "ss", "sp", "sy"], near: "adj", assumed: false, minOv: 7, maxWin: 200, internal: true },
+  medium: { types: ["sv", "sr", "ss", "sp", "sy", "rr", "rv"], near: "adj", assumed: true, minOv: 7, maxWin: 365, internal: true },
   loud:   { types: TYPES.map(t => t.key), near: "adj", assumed: true, minOv: 1, maxWin: 99999, internal: true },
 };
 
@@ -55,7 +56,7 @@ function typeKey(a, b) {
   const [x, y] = [a, b].sort();
   if (x === "seismic" || y === "seismic") {
     const other = x === "seismic" ? y : x;
-    return { seismic: "ss", vessel: "sv", rig: "sr", subsea: "sp" }[other] || "sx";
+    return { seismic: "ss", vessel: "sv", rig: "sr", subsea: "sp", site: "sy", notice: "sy" }[other] || "sx";
   }
   if (["site", "notice", "vsp"].includes(x) || ["site", "notice", "vsp"].includes(y)) return "sx";
   if (x === "rig" && y === "rig") return "rr";
