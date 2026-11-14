@@ -226,8 +226,7 @@ function buildControls() {
   range.min = 0; range.max = Math.round((END - START) / DAY);
   range.oninput = () => setDate(START + range.value * DAY, true);
   $("#play").onclick = togglePlay;
-  $("#example").onclick = example;
-  $("#about-btn").onclick = () => $("#about").showModal();
+  $("#about-btn").onclick = () => { $("#about").showModal(); $("#about").scrollTop = 0; };
   $("#fb-btn").onclick = openFeedback;
   $("#fb-copy").onclick = async () => {
     try { await navigator.clipboard.writeText($("#fb-text").value); $("#fb-copy").textContent = "Copied"; }
@@ -347,10 +346,34 @@ function renderTimeline() {
   svg.onclick = e => { const i = e.target.dataset?.i; if (i != null) select(+i); };
 }
 
+// What each PETS reference prefix means (from OPRED's PETS guidance and the Application Type column)
+const REF = {
+  GS: "Geological survey: a consent for seismic, profiler or shallow drilling work, or a notification for light surveys (echo sounder, side-scan, multibeam, visual)",
+  CL: "Consent to locate: permission to put a rig, vessel, installation or pipeline in a given place",
+  DR: "EIA direction to undertake drilling operations",
+  DEP: "EIA direction to deposit materials on the seabed (rock, mattresses)",
+  PL: "EIA direction for a new or changed pipeline",
+  ML: "Marine licence for work or deposits on the seabed",
+  DL: "Disturbance licence for European protected species (whales, dolphins, porpoises)",
+  CP: "Chemical permit for chemicals used or discharged offshore",
+  OTP: "Oil discharge permit", OLP: "Oil discharge permit",
+  EWT: "EIA direction for an extended well test",
+  DRA: "Drilling operation (the application that groups the other consents listed)",
+  WIA: "Well intervention operation (the application that groups the other consents listed)",
+  PLA: "Pipeline operation (the application that groups the other consents listed)",
+  DCA: "Decommissioning operation (the application that groups the other consents listed)",
+  SA: "Standalone application, usually a survey",
+};
+function refTag(r) {
+  const t = REF[r.split("/")[0]];
+  return t ? `<abbr title="${esc(r + ": " + t)}">${esc(r)}</abbr>` : esc(r);
+}
+const pending = a => /Submitted|Decision/.test(a.status || "") && !/Approved|Completed \(\)/.test(a.status || "");
+
 function actLine(a) {
   const what = [a.label, a.field && `at ${esc(a.field)}`, a.unit && `· ${esc(a.unit)}`].filter(Boolean).join(" ");
   return `<span class="dot" style="--c:${CLS[a.cls].color}"></span><b>${esc(a.op)}</b> · ${esc(CLS[a.cls].short)}: ${what}
-    <div class="ref">block ${a.block} · ${fmtRange(a.s, a.e)}${a.assumed ? " (end assumed)" : ""} · ${esc(a.refs.slice(0, 2).join(", "))}${a.refs.length > 2 ? "…" : ""}</div>`;
+    <div class="ref">block ${a.block} · ${fmtRange(a.s, a.e)}${a.assumed ? " (end assumed)" : ""} · ${(a.cls === "rig" || a.cls === "vessel" || a.cls === "subsea" ? [a.key, ...a.refs.slice(0, 2)] : a.refs.slice(0, 2)).map(refTag).join(", ")}${a.refs.length > 2 ? "…" : ""}${pending(a) ? ` · <span class="pend" title="PETS status: ${esc(a.status)}">${a.e < Date.now() ? "no decision recorded" : "awaiting decision"}</span>` : ""}</div>`;
 }
 
 function renderList() {
@@ -565,15 +588,6 @@ function select(i) {
   } else renderMap();
   renderList(); renderTimeline();
   document.querySelector(".alert.sel")?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-}
-
-function example() {
-  state.op = "Shell"; state.preset = "quiet"; state.rules = structuredClone(PRESETS.quiet); state.showN = 40;
-  recompute(); syncControls(); renderSummary();
-  const hit = P.find(p => [p.a.mat, p.b.mat].includes("SA/1119") && [p.a.mat, p.b.mat].includes("WIA/905"));
-  state.year = 0; // force a full redraw
-  setDate(Date.UTC(2019, 7, 10), false);
-  if (hit) select(hit.i);
 }
 
 // ---------------------------------------------------------------- state in the URL

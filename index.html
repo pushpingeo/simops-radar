@@ -76,7 +76,6 @@
       </div>
     </details>
     <button id="fb-btn" class="example fbtn" title="Your Real / Not real marks, to copy or email">Your feedback</button>
-    <button id="example" class="example" title="Shell 3D seismic in 21/29 while Well Enhancer works at Gannet F">▶ Example: Gannet, August 2019</button>
   </section>
 
   <main>
@@ -111,10 +110,20 @@
   <dialog id="about">
     <form method="dialog">
       <h2>What this is</h2>
-      <p>Offshore, a seismic vessel costs around $250,000 a day and a rig waiting to get on location around $500,000. If two operations meet in the same patch of sea, one of them waits.</p>
-      <p>Every survey, rig move, well intervention and pipeline job on the UK shelf needs a consent from the regulator (OPRED), and the list is public. SIMOPS Radar reads that list, finds activities in the same or a neighbouring block whose consent windows overlap, and ranks them by how likely they are to matter.</p>
-      <p>Pick an operator to see only the clashes that involve its own work. Turn the sensitivity down to see the few that are worth a phone call.</p>
-      <p class="small">Limits: locations are licence blocks, not exact positions. Dates are consent windows, which are usually wider than the actual work. Survey notices have no end date, so 30 days is assumed.</p>
+      <p>When two offshore operations need the same patch of sea at the same time, one of them has to wait or work around the other. That usually means a costly vessel or rig standing by, a survey line given up, or a plan rearranged at short notice. Finding out weeks ahead turns that into a phone call between two companies.</p>
+      <p>Every survey, rig move, well intervention and pipeline job on the UK shelf needs a consent from the regulator (OPRED), and the list is public. SIMOPS Radar reads that list every morning, finds activities in the same or a neighbouring block whose consent windows overlap, and ranks them by how likely they are to matter.</p>
+      <p>Pick an operator to see only clashes involving its work, and use Watching to narrow that to, say, its seismic surveys or rigs. Quiet shows the few worth a call. Rules lets you set what counts and shows how each score is made up.</p>
+      <h3>What the consents mean</h3>
+      <p class="small">Each job is one application (for example WIA for a well intervention, DRA for drilling, SA for a standalone survey) with several consents under it. The ones that matter here:</p>
+      <ul class="small">
+        <li><b>GS</b>: geological survey. Seismic, sub-bottom profiler and shallow drilling surveys need a consent. Light surveys (echo sounder, side-scan, multibeam, visual) only need a notification, which has no end date.</li>
+        <li><b>CL</b>: consent to locate a rig, vessel, installation or pipeline. This gives the rig and vessel dates.</li>
+        <li><b>DR</b>, <b>PL</b>, <b>DEP</b>: environmental directions for drilling, pipelines and seabed deposits.</li>
+        <li><b>CP</b>, <b>OTP</b>, <b>ML</b>, <b>DL</b>: chemical, oil discharge, marine and protected-species permits. They show a job is happening but say little about timing.</li>
+      </ul>
+      <p class="small">Hover over a reference on an alert to see what it is. Rejected versions are ignored (the previous version stands), and consents that were surrendered or revoked are left out. Consents with no decision yet are marked.</p>
+      <p class="small">Limits: locations are licence blocks, not exact positions. Dates are consent windows, usually wider than the actual work. Survey notices have no end date, so a length is assumed (30 days unless you change it).</p>
+      <p class="small">Sources: <a href="https://assets.publishing.service.gov.uk/media/5a748879e5274a7f9c586bfc/PETS_-_Industry_User_Guidance_v1_0.pdf" target="_blank" rel="noopener">PETS user guidance</a>, <a href="https://assets.publishing.service.gov.uk/media/67cac950a175f08d198d80b2/2024-04-18-opred-geological-survey-notifications.pdf" target="_blank" rel="noopener">OPRED survey notification note (2024)</a>.</p>
       <div class="row"><button value="ok">Close</button></div>
     </form>
   </dialog>

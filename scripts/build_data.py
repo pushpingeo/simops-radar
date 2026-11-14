@@ -102,8 +102,11 @@ p["status"] = p["Application Status"].astype(str)
 p["atype"] = p["Application Type"].astype(str).str.replace("\n", " ")
 p["Operator"] = p["Operator"].astype(str).str.strip()
 p["MoDU"] = p["MoDU"].where(~p["MoDU"].astype(str).str.strip().str.lower().isin(["none", "nan", ""]))
-p = p[~p["status"].str.contains("Rejected|Surrender|Withdrawn", case=False)]
+# A rejected or withdrawn version never took effect, so the previous version stands.
+p = p[~p["status"].str.contains("Rejected|Withdrawn", case=False)]
 latest = p.sort_values(["ver", "file"]).groupby("base").tail(1)
+# If the consent in force was later surrendered or revoked, the activity is off.
+latest = latest[~latest["status"].str.contains("Surrender|Revoked", case=False)]
 
 VESSEL = re.compile(r"Bibby|Boka|Deep (Arctic|Discoverer|Explorer)|EDT|Edda|Grand Canyon|Havila|Island (Constructor|Frontier|Patriot|Valiant|Vanguard)|Seawell|Normand|Olympic|Seven |Siem|Well Enhancer|Energy Endeavour", re.I)
 
