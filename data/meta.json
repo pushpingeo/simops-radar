@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-14",
+ "updated": "2026-11-17",
  "trackingSince": "2026-11-14",
  "notifyDays": 30,
  "maxNotice": 90,
@@ -17,7 +17,7 @@
  "operators": [
   [
    "Shell",
-   412
+   413
   ],
   [
    "Harbour Energy",
@@ -325,8 +325,8 @@
   ]
  ],
  "counts": {
-  "activities": 2593,
-  "pairs": 10797,
+  "activities": 2594,
+  "pairs": 10780,
   "blocks": 912
  }
 }

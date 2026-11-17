@@ -2,6 +2,7 @@ sheet,Operator,MAT Reference Number,Field,Quadrant/Block,End Quadrant/Block,MoDU
 Standalone,SHELL U.K. LIMITED,SA/121,,49/26,,,,,Consent to Locate a Permanent/Fixed Installation,CL/100/4,2026-08-19,1987-01-01,,Completed (Approved),2026-10-23
 Standalone,SHELL U.K. LIMITED,SA/122,,49/26,,,,,Consent to Locate a Permanent/Fixed Installation,CL/101/4,2026-03-30,1987-01-01,,Completed (Approved),2026-04-10
 Standalone,SHELL U.K. LIMITED,SA/122,,49/26,,,,,Consent to Locate a Permanent/Fixed Installation,CL/101/5,2026-04-21,1987-01-01,,Completed (Approved),2026-04-23
+Standalone,SHELL U.K. LIMITED,SA/122,,49/26,,,,,Consent to Locate a Permanent/Fixed Installation,CL/101/6,2026-11-16,1987-01-01,,Submitted,
 Production,NEO NEXT+ ENERGY PUK LIMITED,PRA/281,DONAN [MAERSK],15/20ab,,,,,Consent to Locate a Permanent/Fixed Installation,CL/1084/6,2026-08-24,2007-01-16,,Completed (Approved),2026-09-24
 Production,BP EXPLORATION OPERATING COMPANY LIMITED,PRA/284,MUNGO,22/20a,,,,,Consent to Locate a Permanent/Fixed Installation,CL/1105/7,2026-04-17,2020-06-01,,Completed (Approved),2026-04-21
 Production,BP EXPLORATION OPERATING COMPANY LIMITED,PRA/284,MUNGO,22/20a,,,,,Consent to Locate a Permanent/Fixed Installation,CL/1105/8,2026-09-28,2020-06-01,,Completed (Approved),2026-10-15
@@ -248,12 +249,14 @@ Production,BUMI ARMADA UK LIMITED,PRA/219,KRAKEN,9/2,,,,,Chemical Permit,CP/1084
 Production,BUMI ARMADA UK LIMITED,PRA/219,KRAKEN,9/2,,,,,Chemical Permit,CP/1084/75,2026-04-21,2016-11-01,,Completed (Approved),2026-04-24
 Production,BUMI ARMADA UK LIMITED,PRA/219,KRAKEN,9/2,,,,,Chemical Permit,CP/1084/76,2026-07-20,2016-11-01,,Completed (Approved),2026-07-20
 Production,BUMI ARMADA UK LIMITED,PRA/219,KRAKEN,9/2,,,,,Chemical Permit,CP/1084/77,2026-09-09,2016-11-01,,Completed (Approved),2026-09-14
+Production,BUMI ARMADA UK LIMITED,PRA/219,KRAKEN,9/2,,,,,Chemical Permit,CP/1084/78,2026-11-13,2016-11-01,,Submitted,
 Production,ENI UK LIMITED,PRA/21,DOUGLAS,110/08,,,,,Chemical Permit,CP/109/72,2026-01-12,2013-01-01,,Completed (Approved),2026-01-16
 Production,ENI UK LIMITED,PRA/21,DOUGLAS,110/08,,,,,Chemical Permit,CP/109/73,2026-04-30,2013-01-01,,Completed (Approved),2026-05-12
 Production,ENI UK LIMITED,PRA/21,DOUGLAS,110/08,,,,,Chemical Permit,CP/109/74,2026-09-18,2013-01-01,,Completed (Approved),2026-09-25
 Production,ENI UK LIMITED,PRA/21,DOUGLAS,110/08,,,,,Chemical Permit,CP/109/75,2026-11-04,2013-01-01,,Completed (Approved),2026-11-13
 Production,CB&I ASSET SOLUTIONS LIMITED,PRA/232,KITTIWAKE,21/18,,,,,Chemical Permit,CP/1298/50,2026-08-04,2013-11-07,,Completed (Approved),2026-08-13
 Production,CB&I ASSET SOLUTIONS LIMITED,PRA/232,KITTIWAKE,21/18,,,,,Chemical Permit,CP/1298/51,2026-10-23,2013-11-07,,Completed (Approved),2026-11-09
+Production,SHELL U.K. LIMITED,PRA/85,CLIPPER NORTH,48/19,,,,,Chemical Permit,CP/130/34,2026-11-13,2013-11-29,,Submitted,
 Production,PERENCO UK LIMITED,PRA/184,NEPTUNE,47/4,,,,,Chemical Permit,CP/1301/18,2026-07-27,2017-05-23,,Completed (Approved),2026-07-29
 Production,PERENCO UK LIMITED,PRA/184,NEPTUNE,47/4,,,,,Chemical Permit,CP/1301/19,2026-11-03,2017-05-23,,Submitted,
 Production,BW OFFSHORE CATCHER (UK) LIMITED,PRA/229,CATCHER,28/9,,,,,Chemical Permit,CP/1370/57,2026-02-04,2017-10-01,,Completed (Approved),2026-02-11
@@ -295,6 +298,8 @@ Production,ITHACA ENERGY (UK) LIMITED,PRA/100,ERSKINE,23/26B,,,,,Chemical Permit
 Production,NEO NEXT+ ENERGY E&P NORTH SEA UK LIMITED,PRA/230,CULZEAN,22/25a,,,,,Chemical Permit,CP/1649/30,2026-03-20,2018-08-01,,Completed (Approved),2026-03-27
 Production,NEO NEXT+ ENERGY E&P NORTH SEA UK LIMITED,PRA/230,CULZEAN,22/25a,,,,,Chemical Permit,CP/1649/31,2026-07-13,2018-08-01,,Completed (Approved),2026-07-21
 Production,NEO NEXT+ ENERGY E&P NORTH SEA UK LIMITED,PRA/230,CULZEAN,22/25a,,,,,Chemical Permit,CP/1649/32,2026-08-14,2018-08-01,,Completed (Approved),2026-08-24
+Production,NEO NEXT+ ENERGY E&P NORTH SEA UK LIMITED,PRA/230,CULZEAN,22/25a,,,,,Chemical Permit,CP/1649/33,2026-11-13,2018-08-01,,Submitted,
+Production,SHELL U.K. LIMITED,PRA/84,LEMAN [SHELL][pt. of LEMAN],49/26,,,,,Chemical Permit,CP/165/35,2026-11-13,2014-01-01,,Submitted,
 Production,PIERCE PRODUCTION COMPANY LIMITED,PRA/261,PIERCE,23/27,,,,,Chemical Permit,CP/1650/50,2026-03-11,2013-11-19,,Completed (Approved),2026-03-13
 Production,PIERCE PRODUCTION COMPANY LIMITED,PRA/261,PIERCE,23/27,,,,,Chemical Permit,CP/1650/51,2026-03-17,2013-11-19,,Completed (Approved),2026-03-23
 Production,PIERCE PRODUCTION COMPANY LIMITED,PRA/261,PIERCE,23/27,,,,,Chemical Permit,CP/1650/52,2026-04-02,2013-11-19,,Completed (Approved),2026-04-09
@@ -363,6 +368,7 @@ Production,PERENCO UK LIMITED,PRA/97,LANCELOT,48/17,,,,,Chemical Permit,CP/217/2
 Production,PERENCO UK LIMITED,PRA/97,LANCELOT,48/17,,,,,Chemical Permit,CP/217/21,2026-11-04,2014-03-07,,Submitted,
 Production,APACHE BERYL I LIMITED,PRA/44,BERYL,9/13a,,,,,Chemical Permit,CP/225/58,2026-09-01,2014-02-07,,Completed (Approved),2026-09-02
 Production,APACHE BERYL I LIMITED,PRA/44,BERYL,9/13a,,,,,Chemical Permit,CP/225/59,2026-10-22,2014-02-07,,Completed (Approved),2026-10-23
+Production,APACHE BERYL I LIMITED,PRA/44,BERYL,9/13a,,,,,Chemical Permit,CP/225/60,2026-11-13,2014-02-07,,Submitted,
 Production,NEO NEXT+ ENERGY PUK LIMITED,PRA/281,DONAN [MAERSK],15/20ab,,,,,Chemical Permit,CP/2278/28,2026-04-15,2020-02-28,,Completed (Approved),2026-04-20
 Production,NEO NEXT+ ENERGY PUK LIMITED,PRA/281,DONAN [MAERSK],15/20ab,,,,,Chemical Permit,CP/2278/29,2026-06-22,2020-02-28,,Completed (Rejected),2026-06-29
 Production,NEO NEXT+ ENERGY PUK LIMITED,PRA/281,DONAN [MAERSK],15/20ab,,,,,Chemical Permit,CP/2278/30,2026-09-14,2020-02-28,,Completed (Approved),2026-10-19
@@ -384,9 +390,10 @@ Production,TAQA BRATANI LIMITED,PRA/291,BRAE-SOUTH [Part of BRAE],16/07a,,,,,Che
 Production,TAQA BRATANI LIMITED,PRA/291,BRAE-SOUTH [Part of BRAE],16/07a,,,,,Chemical Permit,CP/2402/22,2026-07-14,2020-10-01,,Completed (Approved),2026-07-24
 Production,TAQA BRATANI LIMITED,PRA/291,BRAE-SOUTH [Part of BRAE],16/07a,,,,,Chemical Permit,CP/2402/23,2026-11-03,2020-10-01,,Completed (Approved),2026-11-10
 Production,ODE ASSET MANAGEMENT LIMITED,PRA/292,TOLMOUNT,42/28d,,,,,Chemical Permit,CP/2431/14,2026-07-13,2021-01-09,,Completed (Approved),2026-07-15
-Production,TAQA BRATANI LIMITED,PRA/86,HARDING,9/23,,,,,Chemical Permit,CP/25/47,2026-11-04,2014-06-30,,Submitted,
+Production,TAQA BRATANI LIMITED,PRA/86,HARDING,9/23,,,,,Chemical Permit,CP/25/47,2026-11-04,2014-06-30,,Completed (Approved),2026-11-16
 Production,PERENCO UK LIMITED,PRA/295,LEMAN [PERENCO][pt. of LEMAN],49/27,,,,,Chemical Permit,CP/2548/12,2026-03-25,2021-04-15,,Completed (Approved),2026-03-26
 Production,PERENCO UK LIMITED,PRA/295,LEMAN [PERENCO][pt. of LEMAN],49/27,,,,,Chemical Permit,CP/2548/13,2026-11-06,2021-04-15,,Submitted,
+Production,ODE ASSET MANAGEMENT LIMITED,PRA/301,BLYTHE,48/23,,,,,Chemical Permit,CP/2557/6,2026-11-13,2021-04-12,,Submitted,
 Production,PERENCO UK LIMITED,PRA/61,HYDE,48/06,,,,,Chemical Permit,CP/259/29,2026-11-03,1993-08-02,,Submitted,
 Production,ENI UK LIMITED,PRA/304,CONWY,110/12a,,,,,Chemical Permit,CP/2616/13,2026-11-02,2015-11-28,,Submitted,
 Production,SPIRIT ENERGY PRODUCTION UK LIMITED,PRA/25,SOUTH MORECAMBE,110/03a,,,,,Chemical Permit,CP/27/29,2026-09-28,1985-01-01,,Submitted,
@@ -396,10 +403,15 @@ Production,ANASURIA OPERATING COMPANY LIMITED,PRA/313,TEAL,21/25,,,,,Chemical Pe
 Production,ANASURIA OPERATING COMPANY LIMITED,PRA/313,TEAL,21/25,,,,,Chemical Permit,CP/2828/25,2026-07-22,2022-05-26,,Completed (Approved),2026-07-24
 Production,ANASURIA OPERATING COMPANY LIMITED,PRA/313,TEAL,21/25,,,,,Chemical Permit,CP/2828/26,2026-09-29,2022-05-26,,Completed (Approved),2026-09-30
 Production,ANASURIA OPERATING COMPANY LIMITED,PRA/313,TEAL,21/25,,,,,Chemical Permit,CP/2828/27,2026-11-12,2022-05-26,,Submitted,
+Production,SHELL U.K. LIMITED,PRA/319,BRIGANTINE A,49/19,,,,,Chemical Permit,CP/2870/5,2026-11-13,2022-08-26,,Submitted,
+Production,SHELL U.K. LIMITED,PRA/315,BARQUE,48/13,,,,,Chemical Permit,CP/2878/7,2026-11-13,2022-08-29,,Submitted,
+Production,SHELL U.K. LIMITED,PRA/316,BARQUE,48/13,,,,,Chemical Permit,CP/2879/6,2026-11-13,2022-08-29,,Submitted,
 Production,APACHE BERYL I LIMITED,PRA/43,BERYL,9/13a,,,,,Chemical Permit,CP/288/67,2026-01-06,2014-03-28,,Completed (Approved),2026-01-27
 Production,APACHE BERYL I LIMITED,PRA/43,BERYL,9/13a,,,,,Chemical Permit,CP/288/68,2026-04-23,2014-03-28,,Completed (Approved),2026-04-24
 Production,APACHE BERYL I LIMITED,PRA/43,BERYL,9/13a,,,,,Chemical Permit,CP/288/69,2026-09-21,2014-03-28,,Completed (Approved),2026-09-23
 Production,APACHE BERYL I LIMITED,PRA/43,BERYL,9/13a,,,,,Chemical Permit,CP/288/70,2026-11-12,2014-03-28,,Submitted,
+Production,SHELL U.K. LIMITED,PRA/317,GALLEON,48/20a,,,,,Chemical Permit,CP/2880/6,2026-11-13,2022-08-29,,Submitted,
+Production,SHELL U.K. LIMITED,PRA/318,GALLEON,48/20,,,,,Chemical Permit,CP/2881/6,2026-11-13,2022-08-29,,Submitted,
 Production,APACHE NORTH SEA LIMITED,PRA/94,FORTIES,21/10,,,,,Chemical Permit,CP/289/41,2026-04-30,2014-03-28,,Completed (Approved),2026-05-07
 Production,APACHE NORTH SEA LIMITED,PRA/94,FORTIES,21/10,,,,,Chemical Permit,CP/289/42,2026-11-12,2014-03-28,,Submitted,
 Production,NEO NEXT + ENERGY RESOURCES UK LIMITED,PRA/38,PIPER,15/17,,,,,Chemical Permit,CP/29/91,2026-03-03,1993-02-01,,Completed (Approved),2026-03-06
@@ -429,7 +441,7 @@ Production,CNOOC PETROLEUM EUROPE LIMITED,PRA/125,GOLDEN EAGLE,20/01N,,,,,Chemic
 Production,CNOOC PETROLEUM EUROPE LIMITED,PRA/125,GOLDEN EAGLE,20/01N,,,,,Chemical Permit,CP/333/75,2026-11-11,2014-10-01,,Submitted,
 Decommissioning,DANA PETROLEUM (E&P) LIMITED,DCA/201,"HARRIS, BARRA",210/24e,,,,,Chemical Permit,CP/3358/4,2026-03-06,2024-04-15,2026-03-13,Completed (Approved),2026-03-10
 Production,BRIDGE PETROLEUM 3 LIMITED,PRA/329,BLANE,30/03a,,,,,Chemical Permit,CP/3480/1,2026-02-10,2007-09-11,,Completed (Approved),2026-02-16
-Production,BRIDGE PETROLEUM 3 LIMITED,PRA/329,BLANE,30/03a,,,,,Chemical Permit,CP/3480/2,2026-11-12,2007-09-11,,Submitted,
+Production,BRIDGE PETROLEUM 3 LIMITED,PRA/329,BLANE,30/03a,,,,,Chemical Permit,CP/3480/2,2026-11-12,2007-09-11,,Completed (Approved),2026-11-16
 Drilling,CNOOC PETROLEUM EUROPE LIMITED,DRA/1095,SCOTT,15/22,,,,,Chemical Permit,CP/3514/5,2026-03-06,2025-10-13,2026-10-13,Completed (Approved),2026-03-09
 Drilling,CNOOC PETROLEUM EUROPE LIMITED,DRA/1095,SCOTT,15/22,,,,,Chemical Permit,CP/3514/6,2026-04-10,2025-10-13,2026-10-13,Completed (Approved),2026-04-13
 Decommissioning,NEO NEXT+ ENERGY E&P NORTH SEA UK LIMITED,DCA/214,"GRYPHON, BALLINDALLOCH, MACLURE, TULLICH",9/18b,,,,,Chemical Permit,CP/3560/2,2026-05-28,2025-09-18,2026-09-30,Completed (Approved),2026-06-10
@@ -447,6 +459,9 @@ Pipeline,BP EXPLORATION OPERATING COMPANY LIMITED,PLA/1122,,22/24,22/24,,PL6444,
 Pipeline,CNR INTERNATIONAL (U.K.) LIMITED,PLA/1131,,3/4a,3/4a,,PL921,Production Flowline,Chemical Permit,CP/3622/2,2026-02-03,2025-04-05,2026-12-31,Completed (Approved),2026-02-23
 Pipeline,CNR INTERNATIONAL (U.K.) LIMITED,PLA/1131,,3/4a,3/4a,,PL921,Production Flowline,Chemical Permit,CP/3622/3,2026-07-03,2025-04-05,2026-12-31,Completed (Approved),2026-07-23
 Pipeline,CNR INTERNATIONAL (U.K.) LIMITED,PLA/1131,,3/4a,3/4a,,PL921,Production Flowline,Chemical Permit,CP/3622/4,2026-07-24,2025-04-05,2026-12-31,Completed (Approved),2026-07-28
+Production,THREE60 OPERATIONS SERVICES LIMITED,PRA/336,BEATRICE,11/30a,,,,,Chemical Permit,CP/3635/2,2026-11-16,2003-08-27,,Submitted,
+Production,THREE60 OPERATIONS SERVICES LIMITED,PRA/335,SALTIRE,15/17,,,,,Chemical Permit,CP/3636/2,2026-11-16,1993-05-01,,Submitted,
+Production,THREE60 OPERATIONS SERVICES LIMITED,PRA/337,TARTAN,15/16a,,,,,Chemical Permit,CP/3637/3,2026-11-16,1981-01-01,,Submitted,
 Well Intervention,NEO NEXT + ENERGY RESOURCES UK LIMITED,WIA/1848,BUCHAN,21/01,,MSV Seawell,,,Chemical Permit,CP/3642/6,2026-01-22,2025-09-01,2026-01-31,Completed (Rejected),2026-10-29
 Pipeline,DANA PETROLEUM (E&P) LIMITED,PLA/1143,,29/01,29/01,,PL1647A,Production Flowline,Chemical Permit,CP/3650/11,2026-01-22,2025-05-09,2026-04-30,Completed (Approved),2026-01-30
 Well Intervention,BP EXPLORATION OPERATING COMPANY LIMITED,WIA/1810,MUNGO,22/20a,,Noble Innovator,,,Chemical Permit,CP/3654/6,2026-04-17,2025-05-26,2026-10-31,Completed (Approved),2026-04-20
@@ -454,6 +469,7 @@ Well Intervention,BP EXPLORATION OPERATING COMPANY LIMITED,WIA/1810,MUNGO,22/20a
 Pipeline,SHELL U.K. LIMITED,PLA/1067,,22/5,22/5,,PLU2784,Services Umbilical,Chemical Permit,CP/3660/1,2026-03-13,2026-04-01,2026-05-31,Completed (Rejected),2026-03-31
 Well Intervention,SHELL U.K. LIMITED,WIA/1850,LEMAN [SHELL][pt. of LEMAN],49/26,,Ensco 92,,,Chemical Permit,CP/3661/10,2026-07-27,2025-08-03,2026-11-30,Completed (Approved),2026-07-28
 Well Intervention,SHELL U.K. LIMITED,WIA/1850,LEMAN [SHELL][pt. of LEMAN],49/26,,Ensco 92,,,Chemical Permit,CP/3661/11,2026-10-05,2025-08-03,2026-11-30,Completed (Approved),2026-10-09
+Well Intervention,SHELL U.K. LIMITED,WIA/1850,LEMAN [SHELL][pt. of LEMAN],49/26,,Ensco 92,,,Chemical Permit,CP/3661/12,2026-11-16,2025-08-03,,Submitted,
 Well Intervention,SHELL U.K. LIMITED,WIA/1850,LEMAN [SHELL][pt. of LEMAN],49/26,,Ensco 92,,,Chemical Permit,CP/3661/4,2026-03-31,2025-08-03,2026-08-30,Completed (Approved),2026-04-09
 Well Intervention,SHELL U.K. LIMITED,WIA/1850,LEMAN [SHELL][pt. of LEMAN],49/26,,Ensco 92,,,Chemical Permit,CP/3661/5,2026-04-09,2025-08-03,2026-08-30,Completed (Approved),2026-04-09
 Well Intervention,SHELL U.K. LIMITED,WIA/1850,LEMAN [SHELL][pt. of LEMAN],49/26,,Ensco 92,,,Chemical Permit,CP/3661/6,2026-04-18,2025-08-03,2026-11-30,Completed (Approved),2026-04-23
@@ -612,6 +628,7 @@ Production,ADURA OPERATIONS LIMITED,PRA/356,GANNET A,21/25,,,,,Chemical Permit,C
 Production,ADURA OPERATIONS LIMITED,PRA/356,GANNET A,21/25,,,,,Chemical Permit,CP/3787/3,2026-06-11,2025-12-01,,Completed (Approved),2026-06-26
 Production,ADURA OPERATIONS LIMITED,PRA/356,GANNET A,21/25,,,,,Chemical Permit,CP/3787/4,2026-08-26,2025-12-01,,Completed (Approved),2026-09-07
 Production,ADURA OPERATIONS LIMITED,PRA/356,GANNET A,21/25,,,,,Chemical Permit,CP/3787/5,2026-09-28,2025-12-01,,Completed (Approved),2026-10-29
+Production,ADURA OPERATIONS LIMITED,PRA/356,GANNET A,21/25,,,,,Chemical Permit,CP/3787/6,2026-11-13,2025-12-01,,Submitted,
 Production,ADURA OPERATIONS LIMITED,PRA/358,PENGUIN WEST,211/13,,,,,Chemical Permit,CP/3789/2,2026-02-09,2025-12-01,,Completed (Approved),2026-02-17
 Production,ADURA OPERATIONS LIMITED,PRA/358,PENGUIN WEST,211/13,,,,,Chemical Permit,CP/3789/3,2026-10-14,2025-12-01,,Completed (Approved),2026-11-02
 Production,ADURA OPERATIONS LIMITED,PRA/358,PENGUIN WEST,211/13,,,,,Chemical Permit,CP/3789/4,2026-11-12,2025-12-01,,Submitted,
@@ -954,7 +971,7 @@ Well Intervention,NEO NEXT + ENERGY RESOURCES UK LIMITED,WIA/2006,BUCHAN,21/01,,
 Well Intervention,NEO NEXT + ENERGY RESOURCES UK LIMITED,WIA/2006,BUCHAN,21/01,,Well-Safe Guardian,,,Chemical Permit,CP/3953/3,2026-09-30,2026-05-22,2027-05-14,Completed (Approved),2026-10-01
 Well Intervention,NEO NEXT + ENERGY RESOURCES UK LIMITED,WIA/2006,BUCHAN,21/01,,Well-Safe Guardian,,,Chemical Permit,CP/3953/4,2026-10-02,2026-05-22,2027-05-14,Completed (Approved),2026-10-02
 Well Intervention,NEO NEXT + ENERGY RESOURCES UK LIMITED,WIA/2006,BUCHAN,21/01,,Well-Safe Guardian,,,Chemical Permit,CP/3953/5,2026-10-02,2026-05-22,2027-05-14,Completed (Approved),2026-10-02
-Well Intervention,NEO NEXT + ENERGY RESOURCES UK LIMITED,WIA/2006,BUCHAN,21/01,,Well-Safe Guardian,,,Chemical Permit,CP/3953/6,2026-11-05,2026-05-22,,Submitted,
+Well Intervention,NEO NEXT + ENERGY RESOURCES UK LIMITED,WIA/2006,BUCHAN,21/01,,Well-Safe Guardian,,,Chemical Permit,CP/3953/6,2026-11-05,2026-05-22,2027-05-14,Completed (Approved),2026-11-16
 Decommissioning,SPIRIT ENERGY NORTH SEA OIL LIMITED,DCA/274,SYCAMORE,16/12a,,,,,Chemical Permit,CP/3954/0,2026-04-29,2026-06-01,2026-12-31,Completed (Approved),2026-05-28
 Decommissioning,SPIRIT ENERGY NORTH SEA OIL LIMITED,DCA/274,SYCAMORE,16/12a,,,,,Chemical Permit,CP/3954/1,2026-08-17,2026-06-01,2027-05-31,Completed (Approved),2026-09-10
 Well Intervention,BP EXPLORATION SERVICES LIMITED,WIA/2014,MURLACH [pt of MARNOCK-SKUA],22/24,,Well Enhancer,,,Chemical Permit,CP/3955/0,2026-04-29,2026-06-01,2026-12-31,Completed (Approved),2026-05-25
@@ -1016,6 +1033,7 @@ Drilling,ITHACA (NE) E&P LIMITED,DRA/1176,CYGNUS,44/12a,,Valaris Norway,,,Chemic
 Drilling,BP EXPLORATION OPERATING COMPANY LIMITED,DRA/1182,CLAIR-RIDGE [Part of CLAIR],206/08,,,,,Chemical Permit,CP/3985/0,2026-06-17,2026-11-01,2027-08-31,Completed (Approved),2026-10-08
 Production,THREE60 OPERATIONS SERVICES LIMITED,PRA/372,FULMAR,30/16,,,,,Chemical Permit,CP/3986/0,2026-06-18,1982-02-01,,Completed (Approved),2026-07-01
 Production,THREE60 OPERATIONS SERVICES LIMITED,PRA/372,FULMAR,30/16,,,,,Chemical Permit,CP/3986/1,2026-07-14,1982-02-01,,Completed (Approved),2026-09-21
+Production,THREE60 OPERATIONS SERVICES LIMITED,PRA/372,FULMAR,30/16,,,,,Chemical Permit,CP/3986/2,2026-11-16,1982-02-01,,Submitted,
 Production,THREE60 OPERATIONS SERVICES LIMITED,PRA/370,AUK,30/16,,,,,Chemical Permit,CP/3987/0,2026-06-18,1975-12-01,,Completed (Approved),2026-07-01
 Production,THREE60 OPERATIONS SERVICES LIMITED,PRA/370,AUK,30/16,,,,,Chemical Permit,CP/3987/1,2026-08-17,1975-12-01,,Completed (Approved),2026-09-03
 Production,THREE60 OPERATIONS SERVICES LIMITED,PRA/370,AUK,30/16,,,,,Chemical Permit,CP/3987/2,2026-09-07,1975-12-01,,Completed (Approved),2026-10-07
@@ -1037,6 +1055,7 @@ Pipeline,TAQA BRATANI LIMITED,PLA/1194,,16/7,16/7,,PL6188,Production Flowline,Ch
 Pipeline,TAQA BRATANI LIMITED,PLA/1193,,16/6,16/7,,PL1441.1,Production Flowline,Chemical Permit,CP/3994/0,2026-06-24,2026-08-01,2027-07-31,Completed (Approved),2026-07-24
 Production,THREE60 OPERATIONS SERVICES LIMITED,PRA/371,CLYDE,30/17,,,,,Chemical Permit,CP/3995/0,2026-06-25,1987-03-01,,Completed (Approved),2026-07-01
 Production,THREE60 OPERATIONS SERVICES LIMITED,PRA/371,CLYDE,30/17,,,,,Chemical Permit,CP/3995/1,2026-08-18,1987-03-01,,Completed (Approved),2026-08-24
+Production,THREE60 OPERATIONS SERVICES LIMITED,PRA/371,CLYDE,30/17,,,,,Chemical Permit,CP/3995/2,2026-11-16,1987-03-01,,Submitted,
 Well Intervention,ADURA OPERATIONS LIMITED,WIA/2013,GANNET F,21/30,,Stena Don,,,Chemical Permit,CP/3996/0,2026-06-26,2026-08-28,2026-12-31,Completed (Approved),2026-08-12
 Well Intervention,ADURA OPERATIONS LIMITED,WIA/2013,GANNET F,21/30,,Stena Don,,,Chemical Permit,CP/3996/1,2026-09-15,2026-08-28,2026-12-31,Completed (Approved),2026-09-17
 Drilling,NET ZERO NORTH SEA STORAGE LIMITED,DRA/1168,NEP – Phase 1,43/21,,Noble Intrepid,,,Chemical Permit,CP/3997/0,2026-07-02,2026-09-11,2026-12-31,Completed (Approved),2026-09-11
@@ -1133,7 +1152,7 @@ Drilling,ADURA OPERATIONS LIMITED,DRA/1212,MARINER,9/11a,,,,,Chemical Permit,CP/
 Drilling,NET ZERO NORTH SEA STORAGE LIMITED,DRA/1169,NEP Expansion – Phase 1,42/25,,Noble Intrepid,,,Chemical Permit,CP/4058/0,2026-10-09,2026-11-20,,Submitted,
 Well Intervention,CHRYSAOR LIMITED,WIA/2091,LOMOND,23/21,,,,,Chemical Permit,CP/4059/0,2026-10-09,2027-01-01,,Submitted,
 Well Intervention,CNR INTERNATIONAL (U.K.) LIMITED,WIA/2073,NINIAN,3/3,,,,,Chemical Permit,CP/4060/0,2026-10-14,2027-01-01,,Submitted,
-Drilling,NEO NEXT+ ENERGY E&P UK LIMITED,DRA/1206,ELGIN,22/30c,,Shelf Drilling Fortress,,,Chemical Permit,CP/4061/0,2026-10-19,2026-11-18,,Decision,
+Drilling,NEO NEXT+ ENERGY E&P UK LIMITED,DRA/1206,ELGIN,22/30c,,Shelf Drilling Fortress,,,Chemical Permit,CP/4061/0,2026-10-19,2026-11-18,2027-12-01,Completed (Approved),2026-11-16
 Well Intervention,BP EXPLORATION OPERATING COMPANY LIMITED,WIA/2054,CLAIR-PHASE 1 [Part of CLAIR],206/8,,,,,Chemical Permit,CP/4062/0,2026-10-19,2027-01-01,,Submitted,
 Well Intervention,NEO NEXT + ENERGY RESOURCES UK LIMITED,WIA/2076,AUK,30/16,,,,,Chemical Permit,CP/4063/0,2026-10-20,2027-01-01,2027-12-31,Completed (Approved),2026-11-05
 Well Intervention,NEO NEXT + ENERGY RESOURCES UK LIMITED,WIA/2078,CLYDE,30/17,,,,,Chemical Permit,CP/4064/0,2026-10-20,2027-01-01,2027-12-31,Completed (Approved),2026-11-05
@@ -1175,9 +1194,15 @@ Well Intervention,APACHE NORTH SEA LIMITED,WIA/2113,FORTIES,22/06a,,,,,Chemical 
 Well Intervention,APACHE NORTH SEA LIMITED,WIA/2109,FORTIES,21/10a,,,,,Chemical Permit,CP/4100/0,2026-11-12,2027-01-01,,Submitted,
 Well Intervention,APACHE NORTH SEA LIMITED,WIA/2112,FORTIES,21/10a,,,,,Chemical Permit,CP/4101/0,2026-11-12,2027-01-01,,Submitted,
 Well Intervention,APACHE NORTH SEA LIMITED,WIA/2111,FORTIES,21/10a,,,,,Chemical Permit,CP/4102/0,2026-11-12,2027-01-01,,Submitted,
+Well Intervention,SHELL U.K. LIMITED,WIA/2121,BARQUE,48/13,,,,,Chemical Permit,CP/4103/0,2026-11-13,2027-01-01,,Submitted,
 Well Intervention,SHELL U.K. LIMITED,WIA/2124,CARAVEL,49/20,,,,,Chemical Permit,CP/4105/0,2026-11-13,2027-01-01,,Submitted,
 Well Intervention,SHELL U.K. LIMITED,WIA/2126,CLIPPER NORTH,48/19,,,,,Chemical Permit,CP/4107/0,2026-11-13,2027-01-01,,Submitted,
+Well Intervention,SHELL U.K. LIMITED,WIA/2127,CORVETTE,49/24,,,,,Chemical Permit,CP/4108/0,2026-11-13,2027-01-01,,Submitted,
+Well Intervention,SHELL U.K. LIMITED,WIA/2129,SHAMROCK,49/20,,,,,Chemical Permit,CP/4110/0,2026-11-13,2027-01-01,,Submitted,
 Well Intervention,SHELL U.K. LIMITED,WIA/2130,SKIFF,48/20,,,,,Chemical Permit,CP/4111/0,2026-11-13,2027-01-01,,Submitted,
+Well Intervention,SHELL U.K. LIMITED,WIA/2131,LEMAN [SHELL][pt. of LEMAN],49/26,,Seafox 4,,,Chemical Permit,CP/4113/0,2026-11-13,2027-01-01,,Submitted,
+Well Intervention,ADURA OPERATIONS LIMITED,WIA/2116,MARINER,9/11a,,,,,Chemical Permit,CP/4114/0,2026-11-13,2027-01-01,,Submitted,
+Well Intervention,APACHE BERYL I LIMITED,WIA/2108,BERYL,9/13,,,,,Chemical Permit,CP/4115/0,2026-11-13,2027-01-01,,Submitted,
 Production,SPIRIT ENERGY RESOURCES LIMITED,PRA/103,GROVE,49/10a,,,,,Chemical Permit,CP/43/21,2026-05-01,2009-01-01,,Surrendered,2026-05-01
 Production,SPIRIT ENERGY RESOURCES LIMITED,PRA/103,GROVE,49/10a,,,,,Chemical Permit,CP/43/22,2026-09-25,2009-01-01,,Surrendered,2026-09-25
 Production,SPIRIT ENERGY NORTH SEA LIMITED,PRA/107,,49/04a,,,,,Chemical Permit,CP/45/27,2026-05-01,2007-01-01,,Surrendered,2026-05-01
@@ -1255,6 +1280,7 @@ Drilling,BP EXPLORATION OPERATING COMPANY LIMITED,DRA/1126,CLAIR-RIDGE [Part of 
 Drilling,BP EXPLORATION OPERATING COMPANY LIMITED,DRA/1126,CLAIR-RIDGE [Part of CLAIR],206/08,,,,,EIA Direction (Direction to Undertake Drilling Operations),DR/2566/3,2026-08-20,2025-12-08,2027-03-31,Completed (Approved),2026-09-04
 Drilling,BP EXPLORATION OPERATING COMPANY LIMITED,DRA/1126,CLAIR-RIDGE [Part of CLAIR],206/08,,,,,EIA Direction (Direction to Undertake Drilling Operations),DR/2566/4,2026-09-17,2025-12-08,2027-03-31,Completed (Approved),2026-09-21
 Drilling,BP EXPLORATION OPERATING COMPANY LIMITED,DRA/1126,CLAIR-RIDGE [Part of CLAIR],206/08,,,,,EIA Direction (Direction to Undertake Drilling Operations),DR/2566/5,2026-10-23,2025-12-08,2027-03-31,Completed (Approved),2026-10-29
+Drilling,BP EXPLORATION OPERATING COMPANY LIMITED,DRA/1126,CLAIR-RIDGE [Part of CLAIR],206/08,,,,,EIA Direction (Direction to Undertake Drilling Operations),DR/2566/6,2026-11-13,2025-12-08,,Submitted,
 Drilling,ITHACA ENERGY (UK) LIMITED,DRA/1104,CAPTAIN,13/22a,,,,,EIA Direction (Direction to Undertake Drilling Operations),DR/2586/1,2026-03-11,2025-10-15,2026-06-30,Completed (Approved),2026-03-20
 Drilling,LIVERPOOL BAY CCS LIMITED,DRA/1150,HAMILTON,110/13,,Ensco 72,,,EIA Direction (Direction to Undertake Drilling Operations),DR/2598/1,2026-02-20,2025-12-19,2026-08-31,Completed (Approved),2026-02-27
 Drilling,LIVERPOOL BAY CCS LIMITED,DRA/1150,HAMILTON,110/13,,Ensco 72,,,EIA Direction (Direction to Undertake Drilling Operations),DR/2598/2,2026-06-23,2025-12-19,2026-09-30,Completed (Approved),2026-06-30
@@ -1327,7 +1353,7 @@ Drilling,ADURA OPERATIONS LIMITED,DRA/1212,MARINER,9/11a,,,,,EIA Direction (Dire
 Drilling,ADURA OPERATIONS LIMITED,DRA/1212,MARINER,9/11a,,,,,EIA Direction (Direction to Undertake Drilling Operations),DR/2691/1,2026-11-06,2026-11-11,,Submitted,
 Drilling,NET ZERO NORTH SEA STORAGE LIMITED,DRA/1169,NEP Expansion – Phase 1,42/25,,Noble Intrepid,,,EIA Direction (Direction to Undertake Drilling Operations),DR/2692/0,2026-10-09,2026-11-20,,Submitted,
 Drilling,ITHACA (NE) E&P LIMITED,DRA/1213,CYGNUS,44/11,,,,,EIA Direction (Direction to Undertake Drilling Operations),DR/2693/0,2026-10-15,2026-12-15,2027-08-31,Completed (Approved),2026-11-13
-Drilling,NEO NEXT+ ENERGY E&P UK LIMITED,DRA/1206,ELGIN,22/30c,,Shelf Drilling Fortress,,,EIA Direction (Direction to Undertake Drilling Operations),DR/2694/0,2026-10-19,2026-11-18,,Decision,
+Drilling,NEO NEXT+ ENERGY E&P UK LIMITED,DRA/1206,ELGIN,22/30c,,Shelf Drilling Fortress,,,EIA Direction (Direction to Undertake Drilling Operations),DR/2694/0,2026-10-19,2026-11-18,2027-12-01,Completed (Approved),2026-11-16
 Drilling,ADURA OPERATIONS LIMITED,DRA/1215,MARINER,9/11a,,,,,EIA Direction (Direction to Undertake Drilling Operations),DR/2696/0,2026-10-27,2026-11-24,,Submitted,
 Drilling,ITHACA ENERGY (UK) LIMITED,DRA/1214,CAPTAIN,13/22a,,,,,EIA Direction (Direction to Undertake Drilling Operations),DR/2697/0,2026-11-05,2026-12-20,,Submitted,
 Pipeline,ENI UK LIMITED,PLA/1146,,110/13,110/13,,PL1041,Gas Lift Pipeline,Notification of a Proposed Marine Survey,GS/1921/2,2026-02-01,2025-06-20,,Completed (),
@@ -1517,6 +1543,7 @@ Standalone,NEO NEXT + ENERGY RESOURCES UK LIMITED,SA/2398,,30/16,,,,,Notificatio
 Standalone,NEO NEXT + ENERGY RESOURCES UK LIMITED,SA/2398,,30/16,,,,,Notification of a Proposed Marine Survey,GS/2132/1,2026-07-01,2026-07-09,,Completed (),
 Pipeline,GNI (UK) LIMITED,PLA/1214,,112/10,32/14,,PL1890,Trunk,Consent to Undertake a Geophysical Survey (Sub-bottom Profiler Pinger Survey),GS/2133/0,2026-06-10,2026-07-01,2026-11-30,Completed (Approved),2026-07-29
 Pipeline,GNI (UK) LIMITED,PLA/1214,,112/10,32/14,,PL1890,Trunk,Consent to Undertake a Geophysical Survey (Sub-bottom Profiler Pinger Survey),GS/2133/1,2026-09-18,2026-07-01,2027-01-31,Completed (Approved),2026-09-22
+Pipeline,GNI (UK) LIMITED,PLA/1214,,112/10,32/14,,PL1890,Trunk,Consent to Undertake a Geophysical Survey (Sub-bottom Profiler Pinger Survey),GS/2133/2,2026-11-16,2026-07-01,,Submitted,
 Standalone,NEO NEXT + ENERGY RESOURCES UK LIMITED,SA/2403,,11/30,,,,,"Consent to Undertake a Geophysical Survey (Sub-bottom Profiler Sparker Survey, Sub-bottom Profiler Pinger Survey)",GS/2134/0,2026-06-16,2026-07-13,2026-09-30,Completed (Approved),2026-07-13
 Standalone,NEO NEXT + ENERGY RESOURCES UK LIMITED,SA/2403,,11/30,,,,,"Consent to Undertake a Geophysical Survey (Sub-bottom Profiler Sparker Survey, Sub-bottom Profiler Pinger Survey)",GS/2134/1,2026-07-20,2026-07-13,2026-09-30,Completed (Approved),2026-07-22
 Standalone,ADURA OPERATIONS LIMITED,SA/2364,,23/16,,,,,"Consent to Undertake a Geophysical Survey (2D Seismic Survey, Sub-bottom Profiler Pinger Survey)",GS/2135/0,2026-06-17,2026-07-21,2026-09-30,Completed (Approved),2026-07-08
@@ -1629,6 +1656,7 @@ Well Intervention,CNOOC ETTRICK U.K. LIMITED,WIA/1839,ETTRICK,20/2a,,,,,Marine L
 Well Intervention,CNOOC ETTRICK U.K. LIMITED,WIA/1839,ETTRICK,20/2a,,,,,Marine Licence,ML/1285/3,2026-05-13,2025-09-12,2026-11-30,Completed (Approved),2026-05-22
 Well Intervention,CNOOC ETTRICK U.K. LIMITED,WIA/1839,ETTRICK,20/2a,,,,,Marine Licence,ML/1285/4,2026-09-08,2025-09-12,2026-09-18,Completed (Approved),2026-09-10
 Well Intervention,SHELL U.K. LIMITED,WIA/1850,LEMAN [SHELL][pt. of LEMAN],49/26,,Ensco 92,,,Marine Licence,ML/1289/3,2026-03-30,2025-06-07,2026-11-30,Completed (Approved),2026-04-10
+Well Intervention,SHELL U.K. LIMITED,WIA/1850,LEMAN [SHELL][pt. of LEMAN],49/26,,Ensco 92,,,Marine Licence,ML/1289/4,2026-11-16,2025-06-07,,Submitted,
 Pipeline,SHELL U.K. LIMITED,PLA/1067,,22/5,22/5,,PLU2784,Services Umbilical,Marine Licence,ML/1290/1,2026-03-12,2026-04-01,2026-05-31,Completed (Rejected),2026-03-31
 Pipeline,ENI UK LIMITED,PLA/1146,,110/13,110/13,,PL1041,Gas Lift Pipeline,Marine Licence,ML/1298/1,2026-02-01,2025-06-20,2026-10-31,Completed (Approved),2026-02-05
 Pipeline,ENI UK LIMITED,PLA/1146,,110/13,110/13,,PL1041,Gas Lift Pipeline,Marine Licence,ML/1298/2,2026-09-03,2025-06-20,2027-07-31,Completed (Approved),2026-09-10
@@ -1846,7 +1874,7 @@ Standalone,HARTSHEAD RESOURCES LTD,SA/2356,,49/17,,,,,Marine Licence,ML/1497/1,2
 Pipeline,ENERGEAN UK LTD,PLA/1192,,43/22A,43/24a,,PL2162,Production Flowline,Marine Licence,ML/1498/0,2026-05-28,2026-07-01,2026-12-31,Completed (Approved),2026-06-26
 Decommissioning,PETRODEC UK LIMITED,DCA/284,KILMAR,43/22A,,,,,Marine Licence,ML/1499/0,2026-05-28,2026-07-01,2026-12-31,Completed (Approved),2026-06-26
 Pipeline,SHELL U.K. LIMITED,PLA/1198,,22/30,22/30,,PLU2347,Control Jumper (multi-core),Marine Licence,ML/1500/0,2026-05-28,2026-07-01,2027-07-01,Completed (Approved),2026-06-23
-Pipeline,SHELL U.K. LIMITED,PLA/1198,,22/30,22/30,,PLU2347,Control Jumper (multi-core),Marine Licence,ML/1500/1,2026-11-09,2026-07-01,,Decision,
+Pipeline,SHELL U.K. LIMITED,PLA/1198,,22/30,22/30,,PLU2347,Control Jumper (multi-core),Marine Licence,ML/1500/1,2026-11-09,2026-07-01,2027-07-01,Completed (Approved),2026-11-16
 Pipeline,SHELL U.K. LIMITED,PLA/1197,,14/26,13/30,,PLU2033,Umbilical Jumper,Marine Licence,ML/1501/0,2026-05-29,2026-07-01,2027-07-01,Completed (Approved),2026-06-24
 Pipeline,SHELL U.K. LIMITED,PLA/1197,,14/26,13/30,,PLU2033,Umbilical Jumper,Marine Licence,ML/1501/1,2026-11-09,2026-07-01,2027-07-01,Completed (Approved),2026-11-12
 Standalone,SERICA ENERGY (UK) LIMITED,SA/2341,,9/9,,,,,Marine Licence,ML/1502/0,2026-06-01,2026-07-16,2026-09-25,Completed (Approved),2026-06-30
@@ -2088,7 +2116,7 @@ Decommissioning,NEO NEXT+ ENERGY E&P NORTH SEA UK LIMITED,DCA/214,"GRYPHON, BALL
 Pipeline,ENI UK LIMITED,PLA/1146,,110/13,110/13,,PL1041,Gas Lift Pipeline,Oil Discharge Permit,OTP/1654/1,2026-02-01,2025-06-20,2026-10-31,Completed (Approved),2026-02-19
 Pipeline,ENI UK LIMITED,PLA/1146,,110/13,110/13,,PL1041,Gas Lift Pipeline,Oil Discharge Permit,OTP/1654/2,2026-09-03,2025-06-20,2027-07-31,Completed (Approved),2026-09-24
 Pipeline,ENI UK LIMITED,PLA/1147,,110/13,110/13,,PL1039,Gas Lift Pipeline,Oil Discharge Permit,OTP/1658/1,2026-03-09,2025-06-20,2026-10-31,Completed (Approved),2026-03-23
-Pipeline,ENI UK LIMITED,PLA/1147,,110/13,110/13,,PL1039,Gas Lift Pipeline,Oil Discharge Permit,OTP/1658/2,2026-08-21,2025-06-20,,Submitted,
+Pipeline,ENI UK LIMITED,PLA/1147,,110/13,110/13,,PL1039,Gas Lift Pipeline,Oil Discharge Permit,OTP/1658/2,2026-08-21,2025-06-20,,Decision,
 Pipeline,ENI UK LIMITED,PLA/1149,,110/13,110/15,,PL1034,Production Flowline,Oil Discharge Permit,OTP/1661/1,2026-04-24,2025-06-25,2027-05-31,Completed (Approved),2026-05-15
 Well Intervention,ENI UK LIMITED,WIA/1763,HAMILTON,110/13,,Valaris 72,,,Oil Discharge Permit,OTP/1670/1,2026-04-15,2025-09-01,2026-08-31,Completed (Approved),2026-05-15
 Well Intervention,ENI UK LIMITED,WIA/1763,HAMILTON,110/13,,Valaris 72,,,Oil Discharge Permit,OTP/1670/2,2026-05-18,2025-09-01,2026-08-31,Completed (Approved),2026-05-20
@@ -2328,6 +2356,7 @@ Pipeline,ADURA OPERATIONS LIMITED,PLA/1179,,211/13,211/14,,PL6792,Infield Pipeli
 Pipeline,ADURA OPERATIONS LIMITED,PLA/1179,,211/13,211/14,,PL6792,Infield Pipeline,"EIA Direction (Screening direction for a pipeline, where the pipeline is for the transport of oil, or gas, or chemicals or for the transport of carbon dioxide for the purpose of geological storage, or for the purpose of providing power or fuel)",PL/2658/1,2026-08-25,2026-07-29,2027-07-29,Completed (Approved),2026-09-02
 Pipeline,GNI (UK) LIMITED,PLA/1214,,112/10,32/14,,PL1890,Trunk,"EIA Direction (Screening direction for a change to or extension of a previously approved Schedule 1 or Schedule 2 project involving a pipeline, where the pipeline is for the transport of oil, gas, or chemicals or for the transport of carbon dioxide for the purpose of geological storage, or for the purpose of providing power or fuel)",PL/2659/0,2026-06-10,2026-07-01,2026-11-30,Completed (Approved),2026-07-29
 Pipeline,GNI (UK) LIMITED,PLA/1214,,112/10,32/14,,PL1890,Trunk,"EIA Direction (Screening direction for a change to or extension of a previously approved Schedule 1 or Schedule 2 project involving a pipeline, where the pipeline is for the transport of oil, gas, or chemicals or for the transport of carbon dioxide for the purpose of geological storage, or for the purpose of providing power or fuel)",PL/2659/1,2026-09-18,2026-07-01,2027-01-31,Completed (Approved),2026-09-22
+Pipeline,GNI (UK) LIMITED,PLA/1214,,112/10,32/14,,PL1890,Trunk,"EIA Direction (Screening direction for a change to or extension of a previously approved Schedule 1 or Schedule 2 project involving a pipeline, where the pipeline is for the transport of oil, gas, or chemicals or for the transport of carbon dioxide for the purpose of geological storage, or for the purpose of providing power or fuel)",PL/2659/2,2026-11-16,2026-07-01,,Submitted,
 Pipeline,BP EXPLORATION OPERATING COMPANY LIMITED,PLA/1207,,23/26,23/26,,PLAAAA,Infield Pipeline System (Pipelines / Umbilicals / Cables),"EIA Direction (Screening direction for a pipeline, where the pipeline is for the transport of oil, or gas, or chemicals or for the transport of carbon dioxide for the purpose of geological storage, or for the purpose of providing power or fuel)",PL/2661/0,2026-06-12,2026-07-01,2026-12-31,Completed (Approved),2026-07-23
 Pipeline,INEOS E&P (UK) LIMITED,PLA/1217,,42/11,41/11,,PL2768,Infield,"EIA Direction (Screening direction for a change to or extension of a previously approved Schedule 1 or Schedule 2 project involving a pipeline, where the pipeline is for the transport of oil, gas, or chemicals or for the transport of carbon dioxide for the purpose of geological storage, or for the purpose of providing power or fuel)",PL/2675/0,2026-07-30,2026-10-31,2026-12-31,Completed (Approved),2026-09-07
 Pipeline,BBL COMPANY V.O.F.,PLA/1219,,53/7,53/7,,PL2225B,Trunk,"EIA Direction (Screening direction for a change to or extension of a previously approved Schedule 1 or Schedule 2 project involving a pipeline, where the pipeline is for the transport of oil, gas, or chemicals or for the transport of carbon dioxide for the purpose of geological storage, or for the purpose of providing power or fuel)",PL/2677/0,2026-08-21,2026-10-05,2027-09-30,Completed (Approved),2026-09-03
@@ -2350,18 +2379,21 @@ Production,ADURA OPERATIONS LIMITED,PRA/354,NELSON,22/11,,,,,Offshore Combustion
 Production,ADURA OPERATIONS LIMITED,PRA/356,GANNET A,21/25,,,,,Offshore Combustion Installation Permit,PPC/118/1,2026-01-30,2025-12-01,,Completed (Approved),2026-02-20
 Production,ADURA OPERATIONS LIMITED,PRA/358,PENGUIN WEST,211/13,,,,,Offshore Combustion Installation Permit,PPC/119/1,2026-01-30,2025-12-01,,Submitted,
 Production,ADURA OPERATIONS LIMITED,PRA/355,SHEARWATER,22/30,,,,,Offshore Combustion Installation Permit,PPC/122/1,2026-04-30,2025-12-01,,Completed (Approved),2026-05-14
-Production,ADURA OPERATIONS LIMITED,PRA/355,SHEARWATER,22/30,,,,,Offshore Combustion Installation Permit,PPC/122/2,2026-10-08,2025-12-01,,Submitted,
+Production,ADURA OPERATIONS LIMITED,PRA/355,SHEARWATER,22/30,,,,,Offshore Combustion Installation Permit,PPC/122/2,2026-10-08,2025-12-01,,Decision,
 Production,GOLAR-NOR (UK) LIMITED,PRA/352,ROSEBANK,205/2a,,,,,Offshore Combustion Installation Permit,PPC/123/0,2026-01-05,2026-04-15,,Completed (Approved),2026-05-22
+Production,GOLAR-NOR (UK) LIMITED,PRA/352,ROSEBANK,205/2a,,,,,Offshore Combustion Installation Permit,PPC/123/1,2026-11-13,2026-04-15,,Submitted,
 Production,CHRYSAOR (U.K.) BRITANNIA LIMITED,PRA/33,BRITANNIA,16/26,,,,,Offshore Combustion Installation Permit,PPC/13/13,2026-03-31,2015-05-25,,Submitted,
 Production,ITHACA ENERGY (UK) LIMITED,PRA/179,CAPTAIN,13/22A,,,,,Offshore Combustion Installation Permit,PPC/14/10,2026-01-29,2015-10-20,,Completed (Approved),2026-03-05
 Production,ITHACA ENERGY (UK) LIMITED,PRA/179,CAPTAIN,13/22A,,,,,Offshore Combustion Installation Permit,PPC/14/12,2026-10-30,2015-10-20,,Submitted,
 Production,NEO NEXT + ENERGY RESOURCES UK LIMITED,PRA/56,CLAYMORE,14/19,,,,,Offshore Combustion Installation Permit,PPC/19/16,2026-04-03,2012-01-01,,Completed (Approved),2026-09-25
 Production,CNOOC PETROLEUM EUROPE LIMITED,PRA/125,GOLDEN EAGLE,20/01N,,,,,Offshore Combustion Installation Permit,PPC/20/14,2026-07-09,2014-07-09,,Completed (Approved),2026-07-24
+Production,CNOOC PETROLEUM EUROPE LIMITED,PRA/125,GOLDEN EAGLE,20/01N,,,,,Offshore Combustion Installation Permit,PPC/20/15,2026-11-16,2014-07-09,,Submitted,
 Production,TAQA BRATANI LIMITED,PRA/86,HARDING,9/23,,,,,Offshore Combustion Installation Permit,PPC/23/13,2026-01-26,2021-08-18,,Completed (Approved),2026-02-05
 Production,TAQA BRATANI LIMITED,PRA/86,HARDING,9/23,,,,,Offshore Combustion Installation Permit,PPC/23/14,2026-08-11,2021-08-18,,Completed (Approved),2026-09-10
 Production,TAQA BRATANI LIMITED,PRA/86,HARDING,9/23,,,,,Offshore Combustion Installation Permit,PPC/23/15,2026-11-12,2021-08-18,,Submitted,
 Production,CNOOC PETROLEUM EUROPE LIMITED,PRA/32,SCOTT,15/22a,,,,,Offshore Combustion Installation Permit,PPC/28/18,2026-01-13,2015-07-02,,Completed (Approved),2026-06-29
 Production,CNOOC PETROLEUM EUROPE LIMITED,PRA/32,SCOTT,15/22a,,,,,Offshore Combustion Installation Permit,PPC/28/19,2026-08-24,2015-07-02,,Completed (Approved),2026-09-22
+Production,CNOOC PETROLEUM EUROPE LIMITED,PRA/32,SCOTT,15/22a,,,,,Offshore Combustion Installation Permit,PPC/28/20,2026-11-16,2015-07-02,,Submitted,
 Production,CNR INTERNATIONAL (U.K.) LIMITED,PRA/66,NINIAN,3/03,,,,,Offshore Combustion Installation Permit,PPC/38/11,2026-04-09,2015-06-30,,Completed (Approved),2026-05-08
 Production,CNR INTERNATIONAL (U.K.) LIMITED,PRA/66,NINIAN,3/03,,,,,Offshore Combustion Installation Permit,PPC/38/12,2026-10-07,2015-06-30,,Completed (Approved),2026-10-28
 Production,ITHACA OIL AND GAS LIMITED,PRA/131,ALBA,16/26,,,,,Offshore Combustion Installation Permit,PPC/47/9,2026-07-06,2015-10-20,,Completed (Approved),2026-09-22
@@ -2384,10 +2416,11 @@ Production,BP EXPLORATION OPERATING COMPANY LIMITED,PRA/155,SCHIEHALLION,204/20,
 Production,BP EXPLORATION OPERATING COMPANY LIMITED,PRA/155,SCHIEHALLION,204/20,,,,,Offshore Combustion Installation Permit,PPC/82/12,2026-07-17,2016-05-16,,Completed (Approved),2026-07-31
 Production,BUMI ARMADA UK LIMITED,PRA/219,KRAKEN,9/2,,,,,Offshore Combustion Installation Permit,PPC/87/17,2026-02-25,2016-12-01,,Submitted,
 Production,CB&I ASSET SOLUTIONS LIMITED,PRA/232,KITTIWAKE,21/18,,,,,Offshore Combustion Installation Permit,PPC/92/21,2026-09-17,2007-10-30,,Completed (Approved),2026-10-28
+Production,CB&I ASSET SOLUTIONS LIMITED,PRA/232,KITTIWAKE,21/18,,,,,Offshore Combustion Installation Permit,PPC/92/22,2026-11-13,2007-10-30,,Submitted,
 Production,CHRYSAOR LIMITED,PRA/243,LOMOND,23/21,,,,,Offshore Combustion Installation Permit,PPC/93/9,2026-03-23,1993-06-30,,Completed (Approved),2026-09-03
 Production,CHRYSAOR LIMITED,PRA/244,EVEREST,22/10,,,,,Offshore Combustion Installation Permit,PPC/94/7,2026-03-19,2007-10-30,,Submitted,
 Production,PIERCE PRODUCTION COMPANY LIMITED,PRA/261,PIERCE,23/27,,,,,Offshore Combustion Installation Permit,PPC/98/8,2026-03-12,2015-06-29,,Completed (Approved),2026-03-20
-Production,PIERCE PRODUCTION COMPANY LIMITED,PRA/261,PIERCE,23/27,,,,,Offshore Combustion Installation Permit,PPC/98/9,2026-10-13,2015-06-29,,Submitted,
+Production,PIERCE PRODUCTION COMPANY LIMITED,PRA/261,PIERCE,23/27,,,,,Offshore Combustion Installation Permit,PPC/98/9,2026-10-13,2015-06-29,,Decision,
 Production,CENTRICA ENERGY STORAGE LIMITED,PRA/2,ROUGH,47/03b,,,,,EIA Direction (Gas unloading and storage project),PR/2285/6,2026-03-24,,,Completed (Approved),2026-03-31
 Production,ADURA OPERATIONS LIMITED,PRA/358,PENGUIN WEST,211/13,,,,,EIA Direction (Direction to Commence Production from New Subsidiary Field),PR/2639/0,2026-02-11,2026-03-01,,Completed (Approved),2026-02-24
 Production,SERICA ENERGY (UK) LIMITED,PRA/266,BRUCE,9/08a,,,,,EIA Direction (Direction to Commence Production from New Primary Field),PR/2645/0,2026-03-03,2027-01-01,,Completed (Approved),2026-04-29
