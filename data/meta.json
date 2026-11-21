@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-20",
+ "updated": "2026-11-21",
  "trackingSince": "2026-11-14",
  "notifyDays": 30,
  "maxNotice": 90,
@@ -17,7 +17,7 @@
  "operators": [
   [
    "Shell",
-   413
+   414
   ],
   [
    "Harbour Energy",
@@ -41,7 +41,7 @@
   ],
   [
    "Equinor",
-   124
+   125
   ],
   [
    "Ithaca Energy",
@@ -68,16 +68,16 @@
    55
   ],
   [
+   "Apache",
+   46
+  ],
+  [
    "Dana Petroleum",
    46
   ],
   [
-   "Apache",
-   45
-  ],
-  [
    "Adura",
-   41
+   42
   ],
   [
    "INEOS",
@@ -325,8 +325,8 @@
   ]
  ],
  "counts": {
-  "activities": 2594,
-  "pairs": 10780,
+  "activities": 2596,
+  "pairs": 10786,
   "blocks": 912
  }
 }
