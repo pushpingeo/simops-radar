@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-24",
+ "updated": "2026-11-25",
  "trackingSince": "2026-11-14",
  "notifyDays": 30,
  "maxNotice": 90,
@@ -97,7 +97,7 @@
   ],
   [
    "Northern Endurance (NZNS)",
-   20
+   21
   ],
   [
    "CGG",
@@ -325,8 +325,8 @@
   ]
  ],
  "counts": {
-  "activities": 2596,
-  "pairs": 10786,
+  "activities": 2597,
+  "pairs": 10721,
   "blocks": 912
  }
 }
