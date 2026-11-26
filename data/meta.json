@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-25",
+ "updated": "2026-11-26",
  "trackingSince": "2026-11-14",
  "notifyDays": 30,
  "maxNotice": 90,
@@ -326,7 +326,7 @@
  ],
  "counts": {
   "activities": 2597,
-  "pairs": 10721,
+  "pairs": 10814,
   "blocks": 912
  }
 }
