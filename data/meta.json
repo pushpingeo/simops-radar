@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-26",
+ "updated": "2026-11-27",
  "trackingSince": "2026-11-14",
  "notifyDays": 30,
  "maxNotice": 90,
@@ -29,7 +29,7 @@
   ],
   [
    "Perenco",
-   234
+   235
   ],
   [
    "BP",
@@ -325,8 +325,8 @@
   ]
  ],
  "counts": {
-  "activities": 2597,
-  "pairs": 10814,
+  "activities": 2598,
+  "pairs": 10816,
   "blocks": 912
  }
 }
